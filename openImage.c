@@ -10,13 +10,15 @@ int main(int argc, int* argv[]){
 	char *mode = "rb"; // rb is read in binary mode
 
 	file_stream = fopen((char *) argv[1], mode); // Read filename from the parameter that was given when the program was called
-	
+
+	//Verification
 	if(file_stream == NULL){
                 fprintf(stderr, "Can't open file, cancelling\n");
                 return 1;
         }
 
-	fseek(file_stream, 0, SEEK_END); // Go to the end of file
+
+	fseek(file_stream, 0, SEEK_END); // Go to the end of the file
 	int file_size = ftell(file_stream); // Offset from start
 	rewind(file_stream); // Go to start
 
@@ -25,10 +27,10 @@ int main(int argc, int* argv[]){
 
 	fclose(file_stream);
 
-// Test to see how to manipulate the file byte for byte
+// Test to see how to manipulate the file byte by byte
 	fwrite( buffer, file_size, 1, stdout); // print to stdout: file_size times 1 Byte from the pointer 'buffer'
 	printf("\n \n");
-	
+
 	buffer[0] = 0x4d;
 
 	fwrite( buffer, file_size, 1, stdout);
