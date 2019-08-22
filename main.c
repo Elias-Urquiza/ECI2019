@@ -11,7 +11,7 @@ void printUsage(){
 
 int main(int argc, char* argv[]){
 
-int mode;	// The code from here it's only to ensure the usage
+int mode;	// The code from here it's only to ensure the usage, the solution to every algorithm is in the modules
 if(argc==1){
 	printUsage();
 	return 0;
