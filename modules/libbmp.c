@@ -158,14 +158,15 @@ BMP* bmp_read(char* src) {
   // (0) open file
   FILE* fsrc = fopen(src,"r");
   if (fsrc == 0) {
-      fprintf(stderr, "Error al abrir el archivo.\n");
+      fprintf(stderr, "Error opening file.\n");
       return 0;
   } // Error al abrir el archivo
 
   // (1) read bitmap file header
   BMPFH* bmp_fh = (BMPFH*) malloc(sizeof(BMPFH));
   if(!fread(bmp_fh, sizeof(BMPFH), 1, fsrc)){
-      fprintf(stderr, "Error al leer el archivo.\n");
+      fprintf(stderr, "Error reading file.\n");
+      exit(EXIT_FAILURE);
       return 0;
   } // Error al leer el archivo
 
@@ -182,7 +183,8 @@ BMP* bmp_read(char* src) {
     bmp_info = malloc(sizeof(BMPV3IH));
   }
   if(!bmp_info){
-      fprintf(stderr, "Formato de archivo no soportado.\n");
+      fprintf(stderr, "File's format not soported.\n");
+      exit(EXIT_FAILURE);
       return 0;
   } // Error formato no soportado
   if(!fread(bmp_info, info_header_size, 1, fsrc)){ return 0; } // Error al leer el archivo
@@ -358,3 +360,9 @@ void bmp_convert_8_to_32_bpp (BMP *img)
 }
 
 
+void setear_buffer(buffer_info_t *buffer, BMP *bmp) {
+  buffer->bytes              = bmp_data(bmp);
+  buffer->width              = bmp_width(bmp);
+  buffer->height             = bmp_height(bmp);
+  buffer->row_size           = bmp_bytes_per_row(bmp);
+}
