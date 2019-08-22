@@ -143,52 +143,53 @@ typedef struct __attribute__((packed)) s_BITMAPV5HEADER{
 
 typedef struct s_BMP { BMPFH* fh; void* ih; uint8_t* data; } BMP;
 
-/** get_BMPIH: crea un info header con parametros default**/
+/** get_BMPIH: creates an info header with default parameters**/
 BMPIH* get_BMPIH(uint32_t width, uint32_t height);
 
-/** get_BMPV5H: crea un info header v5 con parametros default **/
+/** get_BMPv5H: creates a V5 info header with default parameters**/
 BMPV5H* get_BMPV5H(uint32_t width, uint32_t height);
 
-/** bmp_create: Crea un bmp usando un headers info (40B or 124B), init_data en 1 incializa data **/
+/** bmp_create: Creates a bmp using info headers(40B or 124B), a 1 in init_data initializes the data **/
 BMP* bmp_create(void* info_header, int init_data);
 
-/** bmp_copy: Copia un bmp, copia data si copy_data es 1 **/
+/** bmp_copy: Copies a bmp, and copies it's data if copy_data is 1 **/
 BMP* bmp_copy(BMP* img, int copy_data);
 
-/** crea un bmp vacio de width x height **/
+/** creates an empty bmp of width x height **/
 BMP* bmp_new(int width, int height);
 
-/** bmp_read: Lee un bmp **/
+/** opens and starts reading a bmp **/
 BMP* bmp_read(char* src);
 
-/** bmp_save: Guarda un bmp **/
+/** saves a bmp **/
 int bmp_save(char* dst, BMP* img);
 
-/** bmp_delete: Borra un bmp **/
+/** deletes a bmp **/
 void bmp_delete(BMP* img);
 
-/** bmp_width: obtiene el ancho de un bmp **/
+/** Obtains the width of a bmp **/
 uint32_t bmp_width(BMP* img);
 
-/** bmp_height: obtiene el alto de un bmp **/
+/** obtains the height of the bmp **/
 uint32_t bmp_height(BMP* img);
 
 /** bmp_bytes_per_row: obtiene el ancho en bytes de cada linea del bmp **/
+/** bmp_bytes_per_row: Obtains the width in Bytes of every row of the bmp **/ 
 uint32_t bmp_bytes_per_row(BMP* img);
 
-/** bmp_bitcount: obtiene el bitcount de un bmp **/
+/** Obtains the bitcount of the bmp **/
 uint16_t bmp_bit_count(BMP* img);
 
-/** bmp_compression: obtiene el codigo de compresion **/
+/** Obtains compression code of the bmp **/
 uint32_t bmp_compression(BMP* img);
 
-/** bmp_data: obtiene la data de un bmp **/
+/** Obtains the data part of the bmp (the pixels) **/
 uint8_t* bmp_data(BMP* img);
 
-/** bmp_convert_24_to_32_bpp: convierte la data del bmp de 24 a 32 bits **/
+/** Converts the data from the 24 bit to 32 bit bmp format **/
 void bmp_convert_24_to_32_bpp(BMP *img);
 
-/** convierte la data entre 8 y 32  **/
+/** Converts data between 8 and 32 bit formats **/
 void bmp_convert_8_to_32_bpp (BMP *img);
 void bmp_convert_32_to_8_bpp (BMP *img);
 

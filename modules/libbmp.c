@@ -73,14 +73,14 @@ BMP* bmp_create(void* info_header, int init_data) {
   unsigned int i;
   BMPIH* ih = (BMPIH*)info_header;
 
-  // (1) creo la data area
+  // (1) create the data area
   unsigned int data_size = ih->biSizeImage;
   uint8_t* new_bmp_data = (uint8_t*)malloc(data_size);
   if(init_data)
     for(i=0;i<data_size;i++)
       new_bmp_data[i] = 0;
 
-  // (2) creo un nuevo fh
+  // (2) creates a new fh
   BMPFH* new_bmp_fh = (BMPFH*) malloc(sizeof(BMPFH));
   new_bmp_fh->bfType[0] = 'B';
   new_bmp_fh->bfType[1] = 'M';
@@ -158,16 +158,16 @@ BMP* bmp_read(char* src) {
   // (0) open file
   FILE* fsrc = fopen(src,"r");
   if (fsrc == 0) {
-      fprintf(stderr, "Error al abrir el archivo.\n");
+      fprintf(stderr, "Error opening the file.\n");
       return 0;
-  } // Error al abrir el archivo
+  } // Error opening the file
 
   // (1) read bitmap file header
   BMPFH* bmp_fh = (BMPFH*) malloc(sizeof(BMPFH));
   if(!fread(bmp_fh, sizeof(BMPFH), 1, fsrc)){
-      fprintf(stderr, "Error al leer el archivo.\n");
+      fprintf(stderr, "Error opening the file.\n");
       return 0;
-  } // Error al leer el archivo
+  } // Error opening the file
 
   // (2) read bitmap info header (TODO: only support BMPV5H(130B) and BMPIH(40B))
   int info_header_size = bmp_fh->bfOffBits - sizeof(BMPFH);
@@ -182,15 +182,15 @@ BMP* bmp_read(char* src) {
     bmp_info = malloc(sizeof(BMPV3IH));
   }
   if(!bmp_info){
-      fprintf(stderr, "Formato de archivo no soportado.\n");
+      fprintf(stderr, "File format not supported.\n");
       return 0;
-  } // Error formato no soportado
+  } // File format not supported 
   if(!fread(bmp_info, info_header_size, 1, fsrc)){ return 0; } // Error al leer el archivo
 
   // (3) read bitmap data pixels
   int image_data_size = bmp_fh->bfSize - info_header_size - sizeof(BMPFH);
   uint8_t* bmp_data = (uint8_t*) malloc(image_data_size);
-  if(!fread(bmp_data, image_data_size, 1, fsrc)){ return 0; } // Error al leer el archivo
+  if(!fread(bmp_data, image_data_size, 1, fsrc)){ return 0; } // Error opening the file
 
   // (4) store information on a BMP struct
   BMP* bmp = (BMP*)malloc(sizeof(BMP));
@@ -209,19 +209,19 @@ int bmp_save(char* dst, BMP* img) {
 
   // (0) open file
   FILE* fdst = fopen (dst,"w+");
-  if(fdst == 0){ return 0; } // Error al abrir el archivo
+  if(fdst == 0){ return 0; } // Error opening the file
 
   // (1) write bitmap file header
   b=fwrite(img->fh, sizeof(BMPFH), 1, fdst); r=b;
-  if(!b){ return 0; } // Error al escribir el archivo
+  if(!b){ return 0; } // Error writing to the file 
 
   // (2) write bitmap info header
   b=fwrite(img->ih, img->fh->bfOffBits-sizeof(BMPFH), 1, fdst); r=r+b;
-  if(!b){ return 0; } // Error al escribir el archivo
+  if(!b){ return 0; } // Error writing to the file 
 
   // (3) write bitmap data
   b=fwrite(img->data, img->fh->bfSize-img->fh->bfOffBits, 1, fdst); r=r+b;
-  if(!b){ return 0; } // Error al escribir el archivo
+  if(!b){ return 0; } // Error writing to the file 
 
   fclose(fdst);
 
@@ -308,7 +308,7 @@ void bmp_convert_32_to_8_bpp (BMP *img)
 	int height = bmp_height(img);
 	int width = bmp_width(img);
 
-	//printf("convirtiendo tamaño %d x %d de 32 a 8...\n", width, height);
+	//printf("converting size %d x %d from 32 to 8...\n", width, height);
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			uchar_t *p_d = &data8 [(i*width+j)];
@@ -336,7 +336,7 @@ void bmp_convert_8_to_32_bpp (BMP *img)
 	int height = bmp_height(img);
 	int width = bmp_width(img);
 
-//	printf("convirtiendo tamaño %d x %d de 8 a 32\n", width, height);
+//	printf("converting size %d x %d from 8 to 32\n", width, height);
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			uchar_t *p_d = &data32[(i*width+j)*4];
