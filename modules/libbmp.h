@@ -31,6 +31,17 @@
 #define size_BITMAPV4HEADER     108
 #define size_BITMAPV5HEADER     124 // supported
 
+typedef struct buffer_info_t
+{
+    int width, height, row_size;
+    unsigned char *bytes;
+    unsigned int tipo;
+} buffer_info_t;
+
+typedef struct bgra_t {
+    unsigned char b, g, r, a;
+} __attribute__((packed)) bgra_t;
+
 typedef enum e_BITMAPTYPE {
 BITMAPINFOHEADER,
 BITMAPV3INFOHEADER,
@@ -193,6 +204,6 @@ void bmp_convert_24_to_32_bpp(BMP *img);
 void bmp_convert_8_to_32_bpp (BMP *img);
 void bmp_convert_32_to_8_bpp (BMP *img);
 
-
+void setear_buffer(buffer_info_t *buffer, BMP *bmp);
 
 #endif /* __BMP__H__ */
