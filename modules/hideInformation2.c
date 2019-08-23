@@ -95,25 +95,33 @@ void start_hideInformation(){
 	int pixel_index = 0;
 	bool pixel_isDefined = false;
 	int j = 0;
-	
-	for (char_index != filesize){
-	if(!char_isDefined){
-		char character = buffer[c];
-		uint8_t bits_character[8] = separateInBits(character);
-		char_isDefined = true;
-		char_index = 0;
-	}
-	if(!pixel_isDefined){
-		/// Hacer una estructura de datos que una los bits completables del pixel original con cada indice de la estructura, la idea que te tire alex.
-	pixel_isDefined = true;
-	pixel_index = 0;
-	}
-	
-	// El while va a ir avanzando por la estructura y modificar los bits completables
-	if(pixel_index == elBitMaximoPosibleSegunElK){ // Aka si se acabaron los bits libres para meter en el pixel
-
-	}
-
+	int char_quantity = 0;
+	// int MaximoIndice_Pixel_segunK = dameLaMaxCantDeBitsSegunK
+	// estoy asumiendo que el tamanio del texto es menor que el que permite guardar la imagen	
+	for (char_quantity != filesize){
+		if(!char_isDefined){
+			char character = buffer[c];
+			uint8_t bits_character[8] = separateInBits(character);
+			char_isDefined = true;
+			char_index = 0;
+		}
+		if(!pixel_isDefined){
+			/// Hacer una estructura de datos que una los bits completables del pixel original con cada indice de la estructura, la idea que te tire alex. La aridad deberia ser: foo(k,dataNEW)
+			pixel_isDefined = true;
+			pixel_index = 0;
+		}
+			while(pixel_index != MaximoIndice_Pixel_segunK && char_index != 7){
+				pixel[pixel_index] = bits_character[char_index];
+			}
+		// El while va a ir avanzando por la estructura y modificar los bits completables
+		if(pixel_index == MaximoIndice_Pixel_segunK){ // Aka si se acabaron los bits libres para meter en el pixel
+			pixel_isDefined = false;
+			pixel_index = 0;
+		}
+		if(char_index == 7){
+			char_isDefined = false;
+			char_index = 0;
+		}	
 	}
 }
 
