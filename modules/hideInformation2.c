@@ -90,76 +90,30 @@ void start_hideInformation(){
 
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
 
-	for (int i = 0; i<pixel_total && i<file_size; i++){
-		
-		uint8_t Bit1, Bit2, Bit3, Bit4, Bit5, Bit6, Bit7, Bit8;
+	int char_index = 0;
+	bool char_isDefined = false;
+	int pixel_index = 0;
+	bool pixel_isDefined = false;
+	int j = 0;
+	
+	for (char_index != filesize){
+	if(!char_isDefined){
+		char character = buffer[c];
+		uint8_t bits_character[8] = separateInBits(character);
+		char_isDefined = true;
+		char_index = 0;
+	}
+	if(!pixel_isDefined){
+		/// Hacer una estructura de datos que una los bits completables del pixel original con cada indice de la estructura, la idea que te tire alex.
+	pixel_isDefined = true;
+	pixel_index = 0;
+	}
+	
+	// El while va a ir avanzando por la estructura y modificar los bits completables
+	if(pixel_index == elBitMaximoPosibleSegunElK){ // Aka si se acabaron los bits libres para meter en el pixel
 
-		Bit1 = buffer[i] & 0x01;
-		Bit2 = buffer[i] & 0x02;
-		Bit3 = buffer[i] & 0x04;
-		Bit4 = buffer[i] & 0x08;
-		Bit5 = buffer[i] & 0x10;
-		Bit6 = buffer[i] & 0x20;
-		Bit7 = buffer[i] & 0x40;
-		Bit8 = buffer[i] & 0x80;
+	}
 
-		if (k == 1){
-			dataNEW[i*4+0] >> k;
-			dataNEW[i*4+1] >> k;
-			dataNEW[i*4+2] >> k;
-			dataNEW[i*4+3] >> k;
+	}
+}
 
-			dataNEW[i*4+0] << k;
-			dataNEW[i*4+1] << k;
-			dataNEW[i*4+2] << k;
-			dataNEW[i*4+3] << k;
-
-			dataNEW[i*4+0] | Bit1;
-			dataNEW[i*4+1] | Bit2;
-			dataNEW[i*4+2] | Bit3;
-			dataNEW[i*4+3] | Bit4;
-
-			dataNEW[i*4+0+4] >> k;
-			dataNEW[i*4+1+4] >> k;
-			dataNEW[i*4+2+4] >> k;
-			dataNEW[i*4+3+4] >> k;
-
-			dataNEW[i*4+0+4] << k;
-			dataNEW[i*4+1+4] << k;
-			dataNEW[i*4+2+4] << k;
-			dataNEW[i*4+3+4] << k;
-
-			dataNEW[i*4+0+4] | Bit5;
-			dataNEW[i*4+1+4] | Bit6;
-			dataNEW[i*4+2+4] | Bit7;
-			dataNEW[i*4+3+4] | Bit8;
-
-			i++;
-
-		} else if (k == 2){
-			dataNEW[i*4+0] >> k;
-			dataNEW[i*4+1] >> k;
-			dataNEW[i*4+2] >> k;
-			dataNEW[i*4+3] >> k;
-
-			dataNEW[i*4+0] << k;
-			dataNEW[i*4+1] << k;
-			dataNEW[i*4+2] << k;
-			dataNEW[i*4+3] << k;
-
-			dataNEW[i*4+0] | (Bit1 | Bit2);
-			dataNEW[i*4+1] | (Bit3 | Bit4);
-			dataNEW[i*4+2] | (Bit5 | Bit6);
-			dataNEW[i*4+3] | (Bit7 | Bit8);
-
-		} else if (k == 3){
-			dataNEW[i*4+0] >> k;
-			dataNEW[i*4+1] >> k;
-			dataNEW[i*4+2] >> (k-1);
-
-			dataNEW[i*4+0] << k;
-			dataNEW[i*4+1] << k;
-			dataNEW[i*4+2] << (k-1);
-
-			dataNEW[i*4+0] | (Bit1 | Bit2 | Bit3);
-			dataNEW[i*4+1] | (Bit
