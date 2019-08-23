@@ -1,12 +1,12 @@
-/* Este archivo debe contener la implementacion de la funcion que escribe en un bmp el mensaje secreto en sus LSB. 
- * Tener en cuenta que hay que preguntarle al usuario en que archivo quiere esconder el mensaje, cual es el mensaje, y cuantos bits usa. 
+/* Este archivo debe contener la implementacion de la funcion que escribe en un bmp el mensaje secreto en sus LSB.
+ * Tener en cuenta que hay que preguntarle al usuario en que archivo quiere esconder el mensaje, cual es el mensaje, y cuantos bits usa.
  * Esta funcion es llamada apenas el usuario elige el modo de uso entre esconder informacion, descifrar informacion, o hacer benchmarking
  */
 
 #include <stdlib.h>
 #include <stddef.h>
 #include "libbmp.h"
-#include <stdio.h> 
+#include <stdio.h>
 
 void start_hideInformation(){
 
@@ -22,14 +22,14 @@ void start_hideInformation(){
 		exit(EXIT_FAILURE);
 	}
 
-	printf("Input the image where the informacion will be hidden:\n");
+	printf("Input the image where the information will be hidden:\n");
 	scanf("%s", file);
 
 	BMP *src_img = bmp_read (file);
 
 	//check the image is ok to use
 	if (bmp_compression(src_img) != BI_RGB) {
-		fprintf(stderr, "Error: La imagen fuente esta comprimida\n");
+		fprintf(stderr, "Error: The source image is compressed.\n");
 		exit(EXIT_FAILURE);
 	}
 
