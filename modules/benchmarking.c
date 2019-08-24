@@ -1,17 +1,20 @@
-/* Este archivo debe contener la implementacion de la funcion que hace benchmarking. 
- * Esta funcion es llamada cuando en el script principal se elige la opcion de benchmarking. 
- * Antes de llamar la funcion no se le pide nada al usuario, 
- * ningun archivo de texto ni imagen para esconder/extraer/loquesea, 
+/* Este archivo debe contener la implementacion de la funcion que hace benchmarking.
+ * Esta funcion es llamada cuando en el script principal se elige la opcion de benchmarking.
+ * Antes de llamar la funcion no se le pide nada al usuario,
+ * ningun archivo de texto ni imagen para esconder/extraer/loquesea,
  * de eso se van a encargar dentro de esta funcion */
 
 #include "benchmarking.h"
+
+using namespace cv;
+
 /*
 double mse (u_int32_t* image1, u_int32_t* image2, u_int32_t height, u_int32_t width){
 	// Iniciatilaze the sum.
 		 long long sum = 0;
-	
+
 	//Cast from uint8_t* to u_int32_t* because we want to iterate per pixel
-		
+
 	 //It iterates every 4 bytes, the same as a pixel.
 	 		for (int j=0; j<457; j++) {
 
@@ -20,7 +23,7 @@ double mse (u_int32_t* image1, u_int32_t* image2, u_int32_t height, u_int32_t wi
 	 				double error    = image1[j*width + i] - image2[j*width + i];
 	 				double cuadrado = error*error;
 	 					   sum     += cuadrado;
-	 					  
+
 	 		}
 	 	}
 
@@ -29,12 +32,16 @@ double mse (u_int32_t* image1, u_int32_t* image2, u_int32_t height, u_int32_t wi
 }
 */
 
-double mse (u_int8_t* image1, u_int8_t* image2, u_int32_t height, u_int32_t width){
+
+
+
+
+double getMSE (u_int8_t* image1, u_int8_t* image2, u_int32_t height, u_int32_t width){
 	// Iniciatilaze the sum.
 		 long long sum = 0;
-	
+
 	//Cast from uint8_t* to u_int32_t* because we want to iterate per pixel
-		
+
 	 //It iterates every 4 bytes, the same as a pixel.
 	 		for (int j=0; j<height; j++) {
 
@@ -46,7 +53,7 @@ double mse (u_int8_t* image1, u_int8_t* image2, u_int32_t height, u_int32_t widt
 	 				double errorB    = image1[j*width + i+3] - image2[j*width + i+3];
 	 				double cuadrado = errorA*errorA + errorR*errorR + errorG*errorG + errorB*errorB;
 	 					   sum     += cuadrado;
-	 					  
+
 	 		}
 	 	}
 
@@ -63,36 +70,73 @@ double psnr (u_int8_t* image1, u_int8_t* image2, u_int32_t height, u_int32_t wid
 		if (mse1 != 0)	{
 
 			res = 10*log10((pow(max,2))/(mse1));
-		
-		} 
+
+		}
 
 
 	return res;
-	
+
 }
 
 
+void checkValidImage(BMP* src_img){
+	if (bmp_compression(src_img) != BI_RGB) {
+		fprintf(stderr, "Error: the image is compressed\n");
+		exit(EXIT_FAILURE); //Ídem de lo anterior + liberar BMP* src_img utilizando la función bmp_delete(src_img); (!)
+	}
+
+	// We convert the bmp to a 32bpp format
+	if (bmp_bit_count(src_img) == 24) {
+		bmp_convert_24_to_32_bpp(src_img);
+	}
+	if (bmp_bit_count(src_img) == 8) {
+		bmp_convert_8_to_32_bpp(src_img);
+	}
+}
+
+BMP* readFirstImage(){
+
+	char file[60];
+	printf("Input the first image:\n");
+	scanf("%s", file);
+
+	BMP *src_img = bmp_read (file);
+	checkValidImage(src_img);
+
+}
+
+BMP* readSecondImage(){
+
+	char file[60];
+	printf("Input the second image:\n");
+	scanf("%s", file);
+
+	BMP *src_img = bmp_read (file);
+	checkValidImage(src_img);
+}
+
 void start_benchmarking(){
-		
 
-		BMP *src_img1    = bmp_read ("photo1.bmp");
 
-		BMP *src_img2    = bmp_read ("photo1C.bmp");
+
+		BMP *src_img1    = readFirstImage();
+		BMP *src_img2    = readSecondImage();
+
+
 
 		//Save the width and height of each BMP.
-	
-		u_int32_t height  = bmp_height(src_img1); 	
+
+		u_int32_t height  = bmp_height(src_img1);
 		u_int32_t width   = bmp_width(src_img1);
 		u_int32_t height1 = bmp_height(src_img2);
 		u_int32_t width1  = bmp_width(src_img2);
-
 
 
 		//Compare the size of each BMP, if they are different, the function will not continue.
 
 		if (height != height1 || width != width1) {
 			printf("The images have different size");
-			
+
 		} else {
 			/*
 			u_int32_t* data1 = (u_int32_t*)bmp_data(src_img1);
@@ -101,14 +145,19 @@ void start_benchmarking(){
 		 	u_int8_t* data1 = (u_int8_t*)bmp_data(src_img1);
 		 	u_int8_t* data2 = (u_int8_t*)bmp_data(src_img2);
 
-			double mse1  = mse(data1, data2, height, width);
-			double psnr1 = psnr(data1, data2, height, width);
 
-			printf("MSE: %lf \n",mse1);
-			printf("PSNR: %lf \n",psnr1);
+      double mse = getMSE(data1, data2, height, width);
+			double psnr = getPSNR( &src_img1, &src_img2)
+			Scalar ssim = getMSSIM( &src_img1, &src_img2)
+
+
+			//double mse1  = mse(data1, data2, height, width);
+			//double psnr1 = psnr(data1, data2, height, width);
+
+			//printf("MSE: %lf \n",mse1);
+			//printf("PSNR: %lf \n",psnr1);
 		}
 }
-
 
 
 
