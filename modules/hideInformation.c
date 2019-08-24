@@ -71,10 +71,10 @@ void start_hideInformation(){
 
 	char file[60];
 	FILE* text = NULL;
-	int file_size = prepareTextVariables(&file,&text);
+	int file_size = prepareTextVariables(&file,&text); // Esta qué función es ? no veo la definición
 	char* text_buffer = make_textBuffer(text, &file_size);
 	printf("filesize %u",file_size);
-	int k = prepareLSBAmount();
+	int k = prepareLSBAmount(); // Y esta?
 
 	//receive the image
 	BMP* src_img = receiveSourceImage(file);	
@@ -83,7 +83,7 @@ void start_hideInformation(){
 	BMP* bmpNEW = bmp_copy(src_img, 1);
 
 	buffer_info_t info_src, info_new;
-	setear_buffer(&info_src, src_img);
+	setear_buffer(&info_src, src_img); // setear_buffer?
 	setear_buffer(&info_new, bmpNEW);
 
 	bgra_t (*src_matrix)[(info_src.row_size+3)/4] = (bgra_t (*)[(info_src.row_size+3)/4]) info_src.bytes;
