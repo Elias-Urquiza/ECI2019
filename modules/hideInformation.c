@@ -40,7 +40,7 @@ int receiveLSBAmount(){
 
 	if (k < 1 || k > 8){
 		printf("Invalid Amount.\n" );
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);//Antes de esto habría que cerrar el puntero al text file y liberar la memoria del buffer (!)
 	}
 	return k;
 }
@@ -54,10 +54,11 @@ BMP* receiveSourceImage(char file[]){
 
 	//check if the image is ok to use
 	if (bmp_compression(src_img) != BI_RGB) {
-		fprintf(stderr, "Error: the image is compressed\n");
-		exit(EXIT_FAILURE);
+		fprintf(stderr, "Error: the image is compressed\n"); 
+		exit(EXIT_FAILURE); //Ídem de lo anterior + liberar BMP* src_img utilizando la función bmp_delete(src_img); (!)
 	}
-
+	
+	// We convert the bmp to a 32bpp format
 	if (bmp_bit_count(src_img) == 24) {
 		bmp_convert_24_to_32_bpp(src_img);
 	}
@@ -103,7 +104,8 @@ void start_hideInformation(){
 	bool pixel_isDefined = false;
 	int text_index = 0;
 	int pixel_MaximumBitCapacity = retMaxKCap(k);
-	// estoy asumiendo que el tamanio del texto es menor que el que permite guardar la imagen	
+
+	// assuming the size of the text is smaller than the size limit allowed by the image
 	while(text_index <= file_size){
 		if(!char_isDefined){
 			char character = text_buffer[textInput_index];
@@ -113,7 +115,7 @@ void start_hideInformation(){
 			char_index = 0;
 		}
 		if(!pixel_isDefined){
-//			char pixel[pixel_MaximumBitCapacity] = function that makes the pixel connected to it's bits.
+//			char pixel[pixel_MaximumBitCapacity] = function that makes the pixel connected to its bits.
 			pixel_isDefined = true;
 			pixel_index = 0;
 		}
@@ -122,8 +124,8 @@ void start_hideInformation(){
 				pixel_index++;
 				char_index++;
 			}
-		// El while va a ir avanzando por la estructura y modificar los bits completables
-		if(pixel_index == pixel_MaximumBitCapacity){ // Aka si se acabaron los bits libres para meter en el pixel
+		// The while-loop will move along the structure and modify the bits that can be completed
+		if(pixel_index == pixel_MaximumBitCapacity){ // In this point, we've run out of available bits to use in the pixel
 			pixel_isDefined = false;
 			pixel_index = 0;
 		}
