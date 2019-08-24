@@ -3,10 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-//COMENTADAS PARA EVITAR PROBLEMAS AL COMPILAR
-// #include "./modules/hideInformation.c"
-// #include "./modules/unhideInformation.c"
-// #include "./modules/benchmarking.c"
+#include "./modules/hideInformation.h"
+#include "./modules/unhideInformation.h"
+#include "./modules/benchmarking.h"
 
 void printUsage(){
 		printf("usage:\nfirst parameter: write a number from 1 to 3.\n1 to hide information\n2 to extract information\n3 to do benchmarking\n");

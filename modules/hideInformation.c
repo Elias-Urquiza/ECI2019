@@ -1,14 +1,6 @@
-/* Este archivo debe contener la implementacion de la funcion que escribe en un bmp el mensaje secreto en sus LSB. 
- * Tener en cuenta que hay que preguntarle al usuario en que archivo quiere esconder el mensaje, cual es el mensaje, y cuantos bits usa. 
- * Esta funcion es llamada apenas el usuario elige el modo de uso entre esconder informacion, descifrar informacion, o hacer benchmarking
- */
+#include "hideInformation.h"
 
-#include <stdlib.h>
-#include <stddef.h>
-#include "libbmp.h"
-#include <stdio.h> 
-
-char* make_text_buffer(FILE* file_stream, int* file_size){
+char* make_textBuffer(FILE* file_stream, int* file_size){
 	char* buffer;
 	char *mode = "rb"; // "rb" is read/binary mode
 	
@@ -23,7 +15,9 @@ char* make_text_buffer(FILE* file_stream, int* file_size){
 	return buffer;
 }
 
-
+int retMaxKCap(int k){
+// depending on the k that has been chosen, the usable bits per pixel are different, we return the quantity in this function
+}
 void start_hideInformation(){
 
 	char file[60];
@@ -39,8 +33,8 @@ void start_hideInformation(){
 	}
 
 	int file_size =0;
-	char* buffer = make_text_buffer(text, &file_size);
-
+	char* textInput_buffer = make_textBuffer(text, &file_size);
+	printf("filesize %u",file_size);
 	//save the k value
 	int k;
 	printf("Input the amount of LSB you want to use:\n");
@@ -90,76 +84,40 @@ void start_hideInformation(){
 
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
 
-	for (int i = 0; i<pixel_total && i<file_size; i++){
-		
-		uint8_t Bit1, Bit2, Bit3, Bit4, Bit5, Bit6, Bit7, Bit8;
+	int char_index = 0;
+	bool char_isDefined = false;
+	int pixel_index = 0;
+	bool pixel_isDefined = false;
+	int textInput_index = 0;
+	int pixel_MaximumBitCapacity = retMaxKCap(k);
+	// estoy asumiendo que el tamanio del texto es menor que el que permite guardar la imagen	
+	while(textInput_index <= file_size){
+		if(!char_isDefined){
+			char character = textInput_buffer[textInput_index];
+			textInput_index++;
+			//uint8_t bits_character[8] = separateInBits(character);
+			char_isDefined = true;
+			char_index = 0;
+		}
+		if(!pixel_isDefined){
+//			char pixel[pixel_MaximumBitCapacity] = function that makes the pixel connected to it's bits.
+			pixel_isDefined = true;
+			pixel_index = 0;
+		}
+			while( pixel_index != pixel_MaximumBitCapacity && char_index != 7){
+				//pixel[pixel_index] = bits_character[char_index];
+				pixel_index++;
+				char_index++;
+			}
+		// El while va a ir avanzando por la estructura y modificar los bits completables
+		if(pixel_index == pixel_MaximumBitCapacity){ // Aka si se acabaron los bits libres para meter en el pixel
+			pixel_isDefined = false;
+			pixel_index = 0;
+		}
+		if(char_index == 7){
+			char_isDefined = false;
+			char_index = 0;
+		}	
+	}
+}
 
-		Bit1 = buffer[i] & 0x01;
-		Bit2 = buffer[i] & 0x02;
-		Bit3 = buffer[i] & 0x04;
-		Bit4 = buffer[i] & 0x08;
-		Bit5 = buffer[i] & 0x10;
-		Bit6 = buffer[i] & 0x20;
-		Bit7 = buffer[i] & 0x40;
-		Bit8 = buffer[i] & 0x80;
-
-		if (k == 1){
-			dataNEW[i*4+0] >> k;
-			dataNEW[i*4+1] >> k;
-			dataNEW[i*4+2] >> k;
-			dataNEW[i*4+3] >> k;
-
-			dataNEW[i*4+0] << k;
-			dataNEW[i*4+1] << k;
-			dataNEW[i*4+2] << k;
-			dataNEW[i*4+3] << k;
-
-			dataNEW[i*4+0] | Bit1;
-			dataNEW[i*4+1] | Bit2;
-			dataNEW[i*4+2] | Bit3;
-			dataNEW[i*4+3] | Bit4;
-
-			dataNEW[i*4+0+4] >> k;
-			dataNEW[i*4+1+4] >> k;
-			dataNEW[i*4+2+4] >> k;
-			dataNEW[i*4+3+4] >> k;
-
-			dataNEW[i*4+0+4] << k;
-			dataNEW[i*4+1+4] << k;
-			dataNEW[i*4+2+4] << k;
-			dataNEW[i*4+3+4] << k;
-
-			dataNEW[i*4+0+4] | Bit5;
-			dataNEW[i*4+1+4] | Bit6;
-			dataNEW[i*4+2+4] | Bit7;
-			dataNEW[i*4+3+4] | Bit8;
-
-			i++;
-
-		} else if (k == 2){
-			dataNEW[i*4+0] >> k;
-			dataNEW[i*4+1] >> k;
-			dataNEW[i*4+2] >> k;
-			dataNEW[i*4+3] >> k;
-
-			dataNEW[i*4+0] << k;
-			dataNEW[i*4+1] << k;
-			dataNEW[i*4+2] << k;
-			dataNEW[i*4+3] << k;
-
-			dataNEW[i*4+0] | (Bit1 | Bit2);
-			dataNEW[i*4+1] | (Bit3 | Bit4);
-			dataNEW[i*4+2] | (Bit5 | Bit6);
-			dataNEW[i*4+3] | (Bit7 | Bit8);
-
-		} else if (k == 3){
-			dataNEW[i*4+0] >> k;
-			dataNEW[i*4+1] >> k;
-			dataNEW[i*4+2] >> (k-1);
-
-			dataNEW[i*4+0] << k;
-			dataNEW[i*4+1] << k;
-			dataNEW[i*4+2] << (k-1);
-
-			dataNEW[i*4+0] | (Bit1 | Bit2 | Bit3);
-			dataNEW[i*4+1] | (Bit
