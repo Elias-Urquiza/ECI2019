@@ -66,6 +66,7 @@ BMP* receiveSourceImage(char file[]){
 		bmp_convert_8_to_32_bpp(src_img);
 	}
 }
+
 void start_hideInformation(){
 
 	char file[60];
