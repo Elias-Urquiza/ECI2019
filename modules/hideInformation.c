@@ -18,34 +18,35 @@ char* make_textBuffer(FILE* file_stream, int* file_size){
 int retMaxKCap(int k){
 // depending on the k that has been chosen, the usable bits per pixel are different, we return the quantity in this function
 }
-void start_hideInformation(){
 
-	char file[60];
-
+int receiveTextVariables(char* file[], FILE** text){
 	//open and prepare text file
 	printf("Input the text file to hide:\n");
 	scanf("%s", file);
 
-	FILE* text = fopen(file,"r");
+	text = fopen(file,"r");
 	if (text == 0) {
 		fprintf(stderr, "Error opening file.\n");
 		exit(EXIT_FAILURE);
 	}
+	int file_size = 0;
+	return file_size;
+}
 
-	int file_size =0;
-	char* textInput_buffer = make_textBuffer(text, &file_size);
-	printf("filesize %u",file_size);
-	//save the k value
-	int k;
+int receiveLSBAmount(){
+	int k = 0;
 	printf("Input the amount of LSB you want to use:\n");
 	scanf("%d", &k);
 
 	if (k < 1 || k > 8){
-		printf("Amount not valid.\n" );
+		printf("Invalid Amount.\n" );
 		exit(EXIT_FAILURE);
 	}
+	return k;
+}
 
-	//read the image
+BMP* receiveSourceImage(char file[]){
+
 	printf("Input the image where the information will be hidden:\n");
 	scanf("%s", file);
 
@@ -63,8 +64,20 @@ void start_hideInformation(){
 	if (bmp_bit_count(src_img) == 8) {
 		bmp_convert_8_to_32_bpp(src_img);
 	}
+}
+void start_hideInformation(){
 
-    //prepare the new image
+	char file[60];
+	FILE* text = NULL;
+	int file_size = prepareTextVariables(&file,&text);
+	char* text_buffer = make_textBuffer(text, &file_size);
+	printf("filesize %u",file_size);
+	int k = prepareLSBAmount();
+
+	//receive the image
+	BMP* src_img = receiveSourceImage(file);	
+
+	//prepare the new image
 	BMP* bmpNEW = bmp_copy(src_img, 1);
 
 	buffer_info_t info_src, info_new;
@@ -88,13 +101,13 @@ void start_hideInformation(){
 	bool char_isDefined = false;
 	int pixel_index = 0;
 	bool pixel_isDefined = false;
-	int textInput_index = 0;
+	int text_index = 0;
 	int pixel_MaximumBitCapacity = retMaxKCap(k);
 	// estoy asumiendo que el tamanio del texto es menor que el que permite guardar la imagen	
-	while(textInput_index <= file_size){
+	while(text_index <= file_size){
 		if(!char_isDefined){
-			char character = textInput_buffer[textInput_index];
-			textInput_index++;
+			char character = text_buffer[textInput_index];
+			text_index++;
 			//uint8_t bits_character[8] = separateInBits(character);
 			char_isDefined = true;
 			char_index = 0;

@@ -15,4 +15,10 @@ void start_hideInformation();
 
 uint8_t* separateInBits(char character);
 
+int receiveTextVariables(char* file[], FILE** text);
+
+int receiveLSBAmount();
+
+BMP* receiveSourceImage(char file[]);
+
 #endif

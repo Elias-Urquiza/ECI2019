@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stddef.h>
-#include "./libbmp.h"
-#include <unistd.h>
 #include "unhideInformation.h"
 
 void start_unhideInformation(){

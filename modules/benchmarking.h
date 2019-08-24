@@ -1,3 +1,5 @@
+#ifndef __BENCHMARKING__
+#define __BENCHMARKING__
 /* Este archivo debe contener la implementacion de la funcion que hace benchmarking. 
  * Esta funcion es llamada cuando en el script principal se elige la opcion de benchmarking. 
  * Antes de llamar la funcion no se le pide nada al usuario, 
@@ -19,4 +21,4 @@ double psnr (u_int8_t* image1, u_int8_t* image2, u_int32_t height, u_int32_t wid
 void start_benchmarking();
 		
 
-
+#endif
