@@ -146,7 +146,7 @@ void start_benchmarking(){
 		 	u_int8_t* data2 = (u_int8_t*)bmp_data(src_img2);
 
 
-      double mse = getMSE(data1, data2, height, width);
+                        double mse = getMSE(data1, data2, height, width);
 			double psnr = getPSNR( &src_img1, &src_img2)
 			Scalar ssim = getMSSIM( &src_img1, &src_img2)
 
