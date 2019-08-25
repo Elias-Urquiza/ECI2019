@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
-#include "libbmp.c"
+#include "libbmp.h"
 
 
 double mse (u_int8_t* image1, u_int8_t* image2, u_int32_t height, u_int32_t width);
