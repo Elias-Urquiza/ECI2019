@@ -13,7 +13,7 @@ int retMaxKCap(int k);
 
 void start_hideInformation();
 
-uint8_t* separateInBits(char character);
+void separateInBits(char* res, char character, int k, int* offset);
 
 int receiveTextVariables(char* file[], FILE** text);
 
