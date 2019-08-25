@@ -2,9 +2,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "./modules/hideInformation.h"
-#include "./modules/unhideInformation.h"
+#include <opencv2/opencv.hpp>
+//#include "./modules/hideInformation.h"
+//#include "./modules/unhideInformation.h"
 #include "./modules/benchmarking.h"
 
 void printUsage(){

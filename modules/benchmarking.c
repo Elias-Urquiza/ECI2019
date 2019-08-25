@@ -31,8 +31,22 @@ double mse (u_int32_t* image1, u_int32_t* image2, u_int32_t height, u_int32_t wi
 	 	return res;
 }
 */
+void writeFile(char* nameImage, double mse, double psnr, double ssim){
 
+	int array_size=3;
+	
+	double datos_original[3]={mse, psnr, ssim};
 
+	FILE* pf = fopen("benchmarks.csv", "a+");
+	fprintf(pf, "%s,", nameImage);
+
+	for (int i=0; i<array_size; i++) {
+		fprintf(pf, "%.2f", datos_original[i]);
+		fprintf(pf, ",");
+	}
+	fprintf(pf, "\n");
+}
+	
 
 
 
@@ -150,7 +164,7 @@ void start_benchmarking(){
 			double psnr = getPSNR( &src_img1, &src_img2)
 			Scalar ssim = getMSSIM( &src_img1, &src_img2)
 
-
+			writeFile(nombreImagen, mse, psnr, ssim); //asumiendo que existe un nombre
 			//double mse1  = mse(data1, data2, height, width);
 			//double psnr1 = psnr(data1, data2, height, width);
 
