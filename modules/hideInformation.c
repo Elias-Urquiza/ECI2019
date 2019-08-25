@@ -5,6 +5,7 @@
 
 #include "hideInformation.h"
 
+//------------------------------------------------------------------------
 char* make_textBuffer(FILE* file_stream, int* file_size){
 	char* buffer;
 	char *mode = "rb"; // "rb" is read/binary mode
@@ -24,12 +25,14 @@ int retMaxKCap(int k){
 	return 4*k;
 }
 
+//------------------------------------------------------------------------
 int receiveTextVariables(char* file[], FILE** text){
 	//open and receive text file
 	
 	return 0;
 }
 
+//------------------------------------------------------------------------
 int receiveLSBAmount(){
 	int k = 0;
 	printf("Input the amount of LSB you want to use:\n");
@@ -41,6 +44,7 @@ int receiveLSBAmount(){
 	}
 	return k;
 }
+//------------------------------------------------------------------------
 
 BMP* receiveSourceImage(char* file[]){
 
@@ -61,19 +65,24 @@ BMP* receiveSourceImage(char* file[]){
 	}	
 
 
-	return src_img	
+	return src_img;
 }
+//------------------------------------------------------------------------
 
-void separateInBits(char* res, char character, int k, int* offset){
-	int j, i;
-	for ( i = 0; i < 8; i++){
-		for( j = 0; j < k; j++){
-			res[i] = character | (0x01 << ((j+*offset) % k));
-		}
+void separateInBits(char* bits_character, char character, int k, int pixelBit_index){
+	int offset = (pixelBit_index-1) % k;
+	int maxBitsPerByte = 8;
+	for (int i = 0; i < maxBitsPerByte; i++){
+		bits_character[i] = (0x01 << i) & character;	
 	}
-	*offset = (j+*offset) % k;
+	int internalOffset = 0;
+	for (int j = k; j < maxBitsPerByte;j++){
+		internalOffset = internalOffset % k;
+		bits_character[j] = bits_character[j] >> (j - (internalOffset+offset));
+		internalOffset++;
+	}
 }
-
+//------------------------------------------------------------------------
 void start_hideInformation(){
 
 	char file[60];
@@ -83,7 +92,7 @@ void start_hideInformation(){
 	printf("Input the text file to hide:\n");
 	scanf("%s", file);
 
-	text = fopen(file,"r");
+	text = fopen(file,"rb");
 	if (text == 0) {
 		fprintf(stderr, "Error opening file.\n");
 		exit(EXIT_FAILURE);
@@ -105,6 +114,19 @@ void start_hideInformation(){
 	//receive the new image
 	BMP* bmpNEW = bmp_copy(src_img, 1);
 
+	buffer_info_t info_src, info_new;
+        setear_buffer(&info_src, src_img); // setear_buffer?
+        setear_buffer(&info_new, bmpNEW);
+
+        bgra_t (*src_matrix)[(info_src.row_size+3)/4] = (bgra_t (*)[(info_src.row_size+3)/4]) info_src.bytes;
+    bgra_t (*new_matrix)[(info_new.row_size+3)/4] = (bgra_t (*)[(info_new.row_size+3)/4]) info_new.bytes;
+
+        uint32_t width = info_new.width;
+        uint32_t height = info_new.height;
+        uint32_t row_size = info_new.row_size;
+
+        //the edit
+
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
 
 	int char_index = 0;
@@ -117,17 +139,16 @@ void start_hideInformation(){
 	uint32_t pixelImage_total = height * row_size;
 	int pixelImage_index = 0;
 
-	int offset = 0;
 	uint8_t bits_character[8];
 
 	printf("afuera\n");
-	// assuming the size of the text is smaller than the size limit allowed by the image
-	while(text_index <= file_size && pixelImage_index <= pixelImage_total){
+
+	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		printf("1\n");
 		if(!char_isDefined){
 			char character = text_buffer[text_index];
 			text_index++;
-			separateInBits(bits_character, character, k, &offset);
+			separateInBits(bits_character, character, k, pixelBit_index);
 			char_isDefined = true;
 			char_index = 0;
 		}

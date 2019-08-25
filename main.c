@@ -2,10 +2,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <opencv2/opencv.hpp>
-//#include "./modules/hideInformation.h"
+//#include "/opt/opencv/include/opencv2/opencv.hpp"
+#include "./modules/hideInformation.h"
 //#include "./modules/unhideInformation.h"
-#include "./modules/benchmarking.h"
+//#include "./modules/benchmarking.h"
 
 void printUsage(){
 		printf("usage:\nfirst parameter: write a number from 1 to 3.\n1 to hide information\n2 to extract information\n3 to do benchmarking\n");
@@ -38,12 +38,12 @@ switch(mode){
 
 	case 2 :
 		printf("You have chosen to unhide information.\n");
-		start_unhideInformation(); // This is the module written by Jonatan, found in unhideinformation.c
+//		start_unhideInformation(); // This is the module written by Jonatan, found in unhideinformation.c
 		break;
 
 	case 3 :
 		printf("You have chosen to perform benchmarking.\n");
-		start_benchmarking(); // This is the module written by Tomás, David and Elías, found in benchmarking.c
+//		start_benchmarking(); // This is the module written by Tomás, David and Elías, found in benchmarking.c
 		break;
 
 	default:
