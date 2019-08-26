@@ -29,17 +29,17 @@ BMP* receiveSourceImage(char* file[]){
 	return src_img;
 }
 
-void printText(char word){
+void printTextStego(char* word){
 	FILE* pf = fopen("texto.csv", "a+");
 	
 
-	for (int i=0; i<array_size; i++) {
+	for (int i=0; i<sizeof(word); i++) {
 		fprintf(pf, "%s ", word[i]);
 	}
 }
 
-uint8_t* receiveImage(){
-
+	uint8_t* receiveImage(){
+	char file[60];
 	printf("Input the image where the information will be hidden:\n");
 	scanf("%s", file);
 	BMP *src_img = receiveSourceImage(&file);
@@ -61,7 +61,7 @@ uint8_t* receiveImage(){
         //the edit
 
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
-	return dataNew;
+	return dataNEW;
 }
 
 
@@ -87,9 +87,14 @@ void start_unhideInformation() {
 	char word[60];
 	int incrementadorWord = 0;
 	int anothertemp_byte;
-
+	int j=0;
+	int i=0;
+	int incrementador = 0;
+	int alineador = 0;
+	u_int32_t height  = bmp_height(dataNew);
+	u_int32_t width   = bmp_width(dataNew);
 	while (j<height && incrementadorWord!= sizeof(word)){
-		while (i<widht*4 && incrementadorWord!= sizeof(word)){
+		while (i<width*4 && incrementadorWord!= sizeof(word)){
 			temp_byte = dataNew[j*width + i] & extractor;
 			int cant= 8-k-k*incrementador-alineador;
 			if (cant > 0){
@@ -106,8 +111,8 @@ void start_unhideInformation() {
 				conteiner = 0;
 
 			} else {
-				int alineador = abs(cant);
-				int extractorAlign = pow(2, cantAlign)-1
+				int cantAlign = abs(cant);
+				int extractorAlign = pow(2, cantAlign)-1;
 				anothertemp_byte = temp_byte | extractorAlign;
 				anothertemp_byte = anothertemp_byte<<k-alineador;
 				temp_byte = temp_byte>>cantAlign;
@@ -116,16 +121,21 @@ void start_unhideInformation() {
 				incrementadorWord++;
 				incrementador = 0;
 				conteiner = 0;
-				conteiner = continer | anothertemp_byte
+				conteiner = conteiner | anothertemp_byte;
 			}
+
 			i++;
 
 	}
 	j++;
 }
 
-		printtext(word);
+		printtextStego(*word);
 
 }
 
+int main(){
+	start_unhideInformation();
+
+}
 

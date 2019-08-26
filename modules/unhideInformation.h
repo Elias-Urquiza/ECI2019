@@ -1,10 +1,14 @@
 #ifndef __UNHIDEINFO__
 #define __UNHIDEINFO__
 
+
+#include <unistd.h>
 #include <stdlib.h>
 #include <stddef.h>
-#include<unistd.h>
-#include "./libbmp.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+#include "libbmp.h"
 
 
 
