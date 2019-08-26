@@ -138,7 +138,8 @@ void start_hideInformation(){
 	uint32_t pixelImage_index = 0;
 
 	uint8_t bits_character[8];
-
+	uint32_t i = 0;
+	uint32_t j = 0;
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		if(!char_isDefined){
 			char character = text_buffer[text_index];
@@ -153,28 +154,32 @@ void start_hideInformation(){
 		}
 			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
 
-				for(int i = 0;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;i++){
-					printf("3\n");
-					dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] >> k ;
-				dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] << k ;
-						for(int j = 0;j<k && char_index <= 7 && pixelBit_index < pixel_MaximumBitCapacity;j++){
-							dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
+				for(;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;i++){
+					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] >> k) ;
+					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] << k) ;
+						for(;j<k && char_index < 8 && pixelBit_index < pixel_MaximumBitCapacity;j++){
+							char newData = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
+							dataNEW[pixelImage_index*4+i] = newData;
 							pixelBit_index++;
 							char_index++;
 						}
+						if(j == k){
+							j = 0;
+						}
+				}
+				if(i == 4){
+					i = 0;
 				}
 			}
 		// The while-loop will move along the structure and modify the bits that can be completed
 		if(pixelBit_index == pixel_MaximumBitCapacity){ // In this point, we've run out of available bits to use in the pixel
 			pixel_isDefined = false;
-			pixelBit_index = 0;
 			pixelImage_index++;
 			printf("pixelImage_index: %u\n",pixelImage_index);
 		}
 		if(char_index == 8){
 			char_isDefined = false;
 			text_index++;
-			char_index = 0;
 			printf("text index: %u \n",text_index);
 		}	
 	}
