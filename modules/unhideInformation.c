@@ -103,6 +103,7 @@ void start_unhideInformation() {
 				word[incrementadorWord] = (char) conteiner;
 				incrementadorWord++;
 				incrementador = 0;
+				conteiner = 0;
 
 			} else {
 				int alineador = abs(cant);
