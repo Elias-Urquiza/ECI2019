@@ -4,7 +4,7 @@
 #include <string.h>
 //#include "/opt/opencv/include/opencv2/opencv.hpp"
 #include "./modules/hideInformation.h"
-//#include "./modules/unhideInformation.h"
+#include "./modules/unhideInformation.h"
 //#include "./modules/benchmarking.h"
 
 void printUsage(){
@@ -38,7 +38,7 @@ switch(mode){
 
 	case 2 :
 		printf("You have chosen to unhide information.\n");
-//		start_unhideInformation(); // This is the module written by Jonatan, found in unhideinformation.c
+		start_unhideInformation(); // This is the module written by Jonatan, found in unhideinformation.c
 		break;
 
 	case 3 :

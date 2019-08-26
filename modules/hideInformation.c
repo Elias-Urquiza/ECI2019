@@ -33,7 +33,7 @@ int receiveTextVariables(char* file[], FILE** text){
 }
 
 //------------------------------------------------------------------------
-int receiveLSBAmount(){
+int receiveLSBAmountHideInfo(){
 	int k = 0;
 	printf("Input the amount of LSB you want to use:\n");
 	scanf("%d", &k);
@@ -46,7 +46,7 @@ int receiveLSBAmount(){
 }
 //------------------------------------------------------------------------
 
-BMP* receiveSourceImage(char* file[]){
+BMP* receiveSourceImageToHide(char* file[]){
 
 	BMP *src_img = bmp_read (file);
 
@@ -102,12 +102,12 @@ void start_hideInformation(){
 
 	printf("filesize %u \n",file_size);
 
-	int k = receiveLSBAmount();
+	int k = receiveLSBAmountHideInfo();
 
 	//receive the image
 	printf("Input the image where the information will be hidden:\n");
 	scanf("%s", file);
-	BMP *src_img = receiveSourceImage(&file);
+	BMP *src_img = receiveSourceImageToHide(&file);
 
 	//receive the new image
 	BMP* bmpNEW = bmp_copy(src_img, 1);

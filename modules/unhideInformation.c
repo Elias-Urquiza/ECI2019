@@ -133,9 +133,3 @@ void start_unhideInformation() {
 		printtextStego(*word);
 
 }
-
-int main(){
-	start_unhideInformation();
-
-}
-
