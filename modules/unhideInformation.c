@@ -7,7 +7,7 @@
 
 
 
-BMP* receiveSourceImage(char* file[]){
+BMP* receiveSourceImage(char file[]){
 
 	BMP *src_img = bmp_read (file);
 
@@ -29,18 +29,18 @@ BMP* receiveSourceImage(char* file[]){
 	return src_img;
 }
 
-void printTextStego(char* word){
+void printTextStego(char word[], int wordLength){
 	FILE* pf = fopen("texto.csv", "a+");
 	
 
-	for (int i=0; i<sizeof(word); i++) {
+	for (int i=0; i<wordLength; i++) {
 		fprintf(pf, "%s ", word[i]);
 	}
 }
 
-	uint8_t* receiveImage(){
+uint8_t* receiveImage(uint32_t *width, uint32_t *height){
 	char file[60];
-	printf("Input the image where the information will be hidden:\n");
+	printf("Input the image where the information has been hidden:\n");
 	scanf("%s", file);
 	BMP *src_img = receiveSourceImage(&file);
 
@@ -54,8 +54,8 @@ void printTextStego(char* word){
         bgra_t (*src_matrix)[(info_src.row_size+3)/4] = (bgra_t (*)[(info_src.row_size+3)/4]) info_src.bytes;
     bgra_t (*new_matrix)[(info_new.row_size+3)/4] = (bgra_t (*)[(info_new.row_size+3)/4]) info_new.bytes;
 
-        uint32_t width = info_new.width;
-        uint32_t height = info_new.height;
+        width = info_new.width;
+        height = info_new.height;
         uint32_t row_size = info_new.row_size;
 
         //the edit
@@ -67,7 +67,7 @@ void printTextStego(char* word){
 
 int receiveLSBAmount(){
 	int k = 0;
-	printf("Input the amount of LSB you want to use:\n");
+	printf("Input the amount of LSB you have used:\n");
 	scanf("%d", &k);
 
 	if (k < 1 || k > 8){
@@ -78,9 +78,10 @@ int receiveLSBAmount(){
 }
 
 void start_unhideInformation() {
-
-	uint8_t* dataNew = receiveImage();
-	int k 			 = receiveLSBAmount();
+	u_int32_t height  = 0;
+	u_int32_t width = 0; 
+	uint8_t* dataNew = receiveImage(&height, &width);
+	int k  = receiveLSBAmount();
 	int extractor = pow(2, k)-1;
 	int temp_byte;
 	int conteiner = 0;
@@ -91,8 +92,6 @@ void start_unhideInformation() {
 	int i=0;
 	int incrementador = 0;
 	int alineador = 0;
-	u_int32_t height  = bmp_height(dataNew);
-	u_int32_t width   = bmp_width(dataNew);
 	while (j<height && incrementadorWord!= sizeof(word)){
 		while (i<width*4 && incrementadorWord!= sizeof(word)){
 			temp_byte = dataNew[j*width + i] & extractor;
@@ -130,6 +129,6 @@ void start_unhideInformation() {
 	j++;
 }
 
-		printtextStego(*word);
+		printTextStego(*word, 60);
 
 }

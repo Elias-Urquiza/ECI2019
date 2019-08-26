@@ -139,9 +139,7 @@ void start_hideInformation(){
 
 	uint8_t bits_character[8];
 
-	printf("afuera\n");
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
-		printf("1\n");
 		if(!char_isDefined){
 			char character = text_buffer[text_index];
 			text_index++;
@@ -154,14 +152,12 @@ void start_hideInformation(){
 			pixelBit_index = 0;
 		}
 			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
-				printf("2\n");
 
 				for(int i = 0;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;i++){
 					printf("3\n");
 					dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] >> k ;
 				dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] << k ;
 						for(int j = 0;j<k && char_index <= 7 && pixelBit_index < pixel_MaximumBitCapacity;j++){
-							printf("4\n");
 							dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
 							pixelBit_index++;
 							char_index++;

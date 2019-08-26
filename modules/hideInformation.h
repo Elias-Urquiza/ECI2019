@@ -17,8 +17,8 @@ void separateInBits(char* res, char character, int k, int pixelBit_index);
 
 int receiveTextVariables(char* file[], FILE** text);
 
-int receiveLSBAmount();
+int receiveLSBAmountHideInfo();
 
-BMP* receiveSourceImage(char* file[]);
+BMP* receiveSourceImageToHide(char* file[]);
 
 #endif
