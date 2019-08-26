@@ -87,7 +87,7 @@ void start_hideInformation(){
 
 	char file[60];
 	FILE* text = NULL;
-	int file_size;
+	uint32_t file_size;
 
 	printf("Input the text file to hide:\n");
 	scanf("%s", file);
@@ -97,8 +97,6 @@ void start_hideInformation(){
 		fprintf(stderr, "Error opening file.\n");
 		exit(EXIT_FAILURE);
 	}
-
-	//int file_size = receiveTextVariables(&file,&text);
 
 	char* text_buffer = make_textBuffer(text, &file_size);
 
@@ -129,20 +127,19 @@ void start_hideInformation(){
 
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
 
-	int char_index = 0;
+	uint32_t char_index = 0;
 	bool char_isDefined = false;
-	int pixelBit_index = 0;
+	uint32_t pixelBit_index = 0;
 	bool pixel_isDefined = false;
 
-	int text_index = 0;
-	int pixel_MaximumBitCapacity = retMaxKCap(k);
+	uint32_t text_index = 0;
+	uint32_t pixel_MaximumBitCapacity = retMaxKCap(k);
 	uint32_t pixelImage_total = height * row_size;
-	int pixelImage_index = 0;
+	uint32_t pixelImage_index = 0;
 
 	uint8_t bits_character[8];
 
 	printf("afuera\n");
-
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		printf("1\n");
 		if(!char_isDefined){
@@ -156,16 +153,16 @@ void start_hideInformation(){
 			pixel_isDefined = true;
 			pixelBit_index = 0;
 		}
-			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 7){
+			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
 				printf("2\n");
 
-				for(int i = 0;i<3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 7;i++){
+				for(int i = 0;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;i++){
 					printf("3\n");
-					dataNEW[pixelImage_index*4+i] >> k ;
-					dataNEW[pixelImage_index*4+i] << k ;
-						for(int j = 0;j<k && char_index <= 7;j++){
+					dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] >> k ;
+				dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] << k ;
+						for(int j = 0;j<k && char_index <= 7 && pixelBit_index < pixel_MaximumBitCapacity;j++){
 							printf("4\n");
-							dataNEW[pixelImage_index*4+i] | bits_character[char_index];
+							dataNEW[pixelImage_index*4+i] = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
 							pixelBit_index++;
 							char_index++;
 						}
@@ -176,11 +173,13 @@ void start_hideInformation(){
 			pixel_isDefined = false;
 			pixelBit_index = 0;
 			pixelImage_index++;
+			printf("pixelImage_index: %u\n",pixelImage_index);
 		}
-		if(char_index == 7){
+		if(char_index == 8){
 			char_isDefined = false;
 			text_index++;
 			char_index = 0;
+			printf("text index: %u \n",text_index);
 		}	
 	}
 
