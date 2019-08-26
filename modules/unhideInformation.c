@@ -44,23 +44,14 @@ uint8_t* receiveImage(uint32_t *width, uint32_t *height){
 	scanf("%s", file);
 	BMP *src_img = receiveSourceImage(file);
 
-	//receive the new image
-	BMP* bmpNEW = bmp_copy(src_img, 1);
-
-	buffer_info_t info_src, info_new;
-        setear_buffer(&info_src, src_img); // setear_buffer?
-        setear_buffer(&info_new, bmpNEW);
-
-        bgra_t (*src_matrix)[(info_src.row_size+3)/4] = (bgra_t (*)[(info_src.row_size+3)/4]) info_src.bytes;
-    bgra_t (*new_matrix)[(info_new.row_size+3)/4] = (bgra_t (*)[(info_new.row_size+3)/4]) info_new.bytes;
-
-        width = info_new.width;
-        height = info_new.height;
-        uint32_t row_size = info_new.row_size;
+	
+        width = bmp_width(src_img);
+        height = bmp_height(src_img);
+      
 
         //the edit
 
-	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
+	uint8_t* dataNEW = (uint8_t*)bmp_data(src_img);
 	return dataNEW;
 }
 
@@ -85,24 +76,29 @@ void start_unhideInformation() {
 	uint8_t extractor = pow(2, k)-1;
 	uint8_t temp_byte;
 	uint8_t conteiner = 0;
-	uint8_t word[400];
+	uint8_t word[5000];
 	int incrementadorWord = 0;
 	u_int8_t anothertemp_byte;
 	int j=0;
 	int i=0;
 	int incrementador = 0;
 	int cantAlign = 0;
-	while (j<height && incrementadorWord != 400){
-		while (i<width*4 && incrementadorWord != 400){
-			temp_byte = dataNew[j*width + i] & extractor;
+	
+		while (incrementadorWord != 5000){
+			temp_byte = dataNew[i] & extractor;
+			printf("Bits originales: %d \n", temp_byte);
 			int cant = 8-k-k*incrementador-cantAlign;
 			if (cant > 0){
+				printf("Bits extraidos: %d \n", temp_byte);
 				temp_byte  = temp_byte<<(cant);
+				printf("Bits extraidos shifteados: %d \n", temp_byte);
 				conteiner  = temp_byte | conteiner;
+				printf("Bits del conteiner: %d \n", conteiner);
 				incrementador++;
 
 			} else if (cant == 0){
 				conteiner  = temp_byte | conteiner;
+				printf("Bits del conteiner: %d \n", conteiner);
 				word[incrementadorWord] = conteiner;
 				incrementadorWord++;
 				incrementador = 0;
@@ -125,14 +121,16 @@ void start_unhideInformation() {
 			i++;
 
 	}
-	j++;
-}
 
 		
 		FILE* pf = fopen("texto.csv", "w");
 	
 
-	for (int i=0; i<400; i++) {
+	for (int i=0; i<5000; i++) {
+		if (i%4 == 0){
+			printf("Pixel: %d \n",i/4);
+		}
+		
 		fprintf(pf, "%d ", word[i]);
 		printf("%d ",word[i]);
 	}
