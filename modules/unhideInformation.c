@@ -29,7 +29,7 @@ BMP* receiveSourceImage(char file[]){
 	return src_img;
 }
 
-void printTextStego(char word[], int wordLength){
+void printTextStego(char* word[], int wordLength){
 	FILE* pf = fopen("texto.csv", "a+");
 	
 
@@ -42,7 +42,7 @@ uint8_t* receiveImage(uint32_t *width, uint32_t *height){
 	char file[60];
 	printf("Input the image where the information has been hidden:\n");
 	scanf("%s", file);
-	BMP *src_img = receiveSourceImage(&file);
+	BMP *src_img = receiveSourceImage(file);
 
 	//receive the new image
 	BMP* bmpNEW = bmp_copy(src_img, 1);
@@ -78,45 +78,44 @@ int receiveLSBAmount(){
 }
 
 void start_unhideInformation() {
-	u_int32_t height  = 0;
-	u_int32_t width = 0; 
+	uint32_t height  = 0;
+	uint32_t width = 0; 
 	uint8_t* dataNew = receiveImage(&height, &width);
 	int k  = receiveLSBAmount();
-	int extractor = pow(2, k)-1;
-	int temp_byte;
-	int conteiner = 0;
-	char word[60];
+	uint8_t extractor = pow(2, k)-1;
+	uint8_t temp_byte;
+	uint8_t conteiner = 0;
+	uint8_t word[400];
 	int incrementadorWord = 0;
-	int anothertemp_byte;
+	u_int8_t anothertemp_byte;
 	int j=0;
 	int i=0;
 	int incrementador = 0;
-	int alineador = 0;
-	while (j<height && incrementadorWord!= sizeof(word)){
-		while (i<width*4 && incrementadorWord!= sizeof(word)){
+	int cantAlign = 0;
+	while (j<height && incrementadorWord != 400){
+		while (i<width*4 && incrementadorWord != 400){
 			temp_byte = dataNew[j*width + i] & extractor;
-			int cant= 8-k-k*incrementador-alineador;
+			int cant = 8-k-k*incrementador-cantAlign;
 			if (cant > 0){
-				temp_byte  = temp_byte<<(8-k-k*incrementador-alineador);
+				temp_byte  = temp_byte<<(cant);
 				conteiner  = temp_byte | conteiner;
 				incrementador++;
 
 			} else if (cant == 0){
-				temp_byte  = temp_byte<<(8-k-k*incrementador-alineador);
 				conteiner  = temp_byte | conteiner;
-				word[incrementadorWord] = (char) conteiner;
+				word[incrementadorWord] = conteiner;
 				incrementadorWord++;
 				incrementador = 0;
 				conteiner = 0;
 
 			} else {
 				int cantAlign = abs(cant);
-				int extractorAlign = pow(2, cantAlign)-1;
-				anothertemp_byte = temp_byte | extractorAlign;
-				anothertemp_byte = anothertemp_byte<<k-alineador;
+				uint8_t extractorAlign = pow(2, cantAlign)-1;
+				anothertemp_byte = temp_byte & extractorAlign;
+				anothertemp_byte = anothertemp_byte<<k-cantAlign;
 				temp_byte = temp_byte>>cantAlign;
 				conteiner  = temp_byte | conteiner;
-				word[incrementadorWord] = (char) conteiner;
+				word[incrementadorWord] = conteiner;
 				incrementadorWord++;
 				incrementador = 0;
 				conteiner = 0;
@@ -129,6 +128,14 @@ void start_unhideInformation() {
 	j++;
 }
 
-		printTextStego(*word, 60);
+		
+		FILE* pf = fopen("texto.csv", "w");
+	
 
+	for (int i=0; i<400; i++) {
+		fprintf(pf, "%d ", word[i]);
+		printf("%d ",word[i]);
+	}
 }
+
+

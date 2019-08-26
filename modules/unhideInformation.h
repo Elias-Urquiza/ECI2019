@@ -17,7 +17,7 @@
 
 void start_unhideInformation();
 BMP* receiveSourceImage(char file[]);
-void printTextStego(char word[], int WordLength);
+void printTextStego(char* word[], int WordLength);
 uint8_t* receiveImage();
 int receiveLSBAmount();
 void start_unhideInformation();
