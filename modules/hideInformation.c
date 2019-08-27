@@ -77,9 +77,10 @@ void separateInBits(char* bits_character, char character, int k, int pixelBit_in
 	}
 	if(k < 8){
 		int internalOffset = 0;
-		for (int j = k; j < maxBitsPerByte;j++){
+		for (int j = 0; j < maxBitsPerByte;j++){
 			internalOffset = internalOffset % k;
-			bits_character[j] = bits_character[j] >> (j - (internalOffset+offset));
+			int totalOffset = (internalOffset+offset) % k;
+			bits_character[j] = bits_character[j] >> (j - (totalOffset));
 			internalOffset++;
 		}
 	}
@@ -142,6 +143,7 @@ void start_hideInformation(){
 	uint8_t bits_character[8];
 	uint32_t i = 0;
 	uint32_t j = 0;
+	bool byte_cleaned = false;
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		if(!char_isDefined){
 			char character = text_buffer[text_index];
@@ -156,8 +158,11 @@ void start_hideInformation(){
 			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
 
 				for(;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;){
+					if(!byte_cleaned){
 					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] >> k) ;
 					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] << k) ;
+					byte_cleaned = true;
+					}
 						for(;j<k && char_index < 8 && pixelBit_index < pixel_MaximumBitCapacity;j++){
 							char newData = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
 							dataNEW[pixelImage_index*4+i] = newData;
@@ -167,6 +172,7 @@ void start_hideInformation(){
 						if(j == k){
 							j = 0;
 							i++;
+							byte_cleaned = false;
 						}
 				}
 				if(i == 4){
