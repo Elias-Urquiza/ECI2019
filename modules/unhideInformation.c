@@ -84,16 +84,15 @@ void start_unhideInformation() {
 	int incrementador = 0;
 	int cantAlign = 0;
 	
-		while (incrementadorWord != 5000){
+		while (incrementadorWord != 1000){
 			temp_byte = dataNew[i] & extractor;
 			printf("Bits originales: %d \n", temp_byte);
 			int cant = 8-k-k*incrementador-cantAlign;
 			if (cant > 0){
 				printf("Bits extraidos: %d \n", temp_byte);
 				temp_byte  = temp_byte<<(cant);
-				printf("Bits extraidos shifteados: %d \n", temp_byte);
 				conteiner  = temp_byte | conteiner;
-				printf("Bits del conteiner: %d \n", conteiner);
+				printf("Bits del conteiner cant: %d \n", conteiner);
 				incrementador++;
 
 			} else if (cant == 0){
@@ -103,12 +102,14 @@ void start_unhideInformation() {
 				incrementadorWord++;
 				incrementador = 0;
 				conteiner = 0;
+				cantAlign = 0;
 
 			} else {
-				int cantAlign = abs(cant);
+				cantAlign = abs(cant);
+				printf("Bits de alineacion: %d \n",cantAlign);
 				uint8_t extractorAlign = pow(2, cantAlign)-1;
 				anothertemp_byte = temp_byte & extractorAlign;
-				anothertemp_byte = anothertemp_byte<<k-cantAlign;
+				anothertemp_byte = anothertemp_byte<<8-cantAlign;
 				temp_byte = temp_byte>>cantAlign;
 				conteiner  = temp_byte | conteiner;
 				word[incrementadorWord] = conteiner;
@@ -126,7 +127,7 @@ void start_unhideInformation() {
 		FILE* pf = fopen("texto.csv", "w");
 	
 
-	for (int i=0; i<5000; i++) {
+	for (int i=0; i<1000; i++) {
 		if (i%4 == 0){
 			printf("Pixel: %d \n",i/4);
 		}
