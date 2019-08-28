@@ -83,9 +83,9 @@ void start_unhideInformation() {
 	int i=0;
 	int incrementador = 0;
 	int cantAlign = 0;
-	
+	int pixel_index = 0;
 		while (incrementadorWord != 1000){
-			temp_byte = dataNew[i] & extractor;
+			temp_byte = dataNew[pixel_index*4 + i] & extractor;
 			printf("Bits originales: %d \n", temp_byte);
 			int cant = 8-k-k*incrementador-cantAlign;
 			if (cant > 0){
@@ -118,7 +118,9 @@ void start_unhideInformation() {
 				conteiner = 0;
 				conteiner = conteiner | anothertemp_byte;
 			}
-
+			if(i == 4){
+			pixel_index++;
+			}
 			i++;
 
 	}
