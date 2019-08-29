@@ -68,6 +68,24 @@ int receiveLSBAmount(){
 	return k;
 }
 
+uint8_t reverseBits(uint8_t conteiner) 
+{ 
+    uint8_t count = sizeof(conteiner) * 8 - 1; 
+    uint8_t reverse_conteiner = conteiner; 
+      
+    conteiner >>= 1;  
+    while(conteiner) 
+    { 
+       reverse_conteiner <<= 1;        
+       reverse_conteiner |= conteiner & 1; 
+       conteiner >>= 1; 
+       count--; 
+    } 
+    reverse_conteiner <<= count; 
+    return reverse_conteiner; 
+} 
+
+
 void start_unhideInformation() {
 	uint32_t height  = 0;
 	uint32_t width = 0; 
@@ -92,12 +110,11 @@ void start_unhideInformation() {
 				printf("Bits extraidos: %d \n", temp_byte);
 				temp_byte  = temp_byte<<(cant);
 				conteiner  = temp_byte | conteiner;
-				printf("Bits del conteiner cant: %d \n", conteiner);
 				incrementador++;
 
 			} else if (cant == 0){
 				conteiner  = temp_byte | conteiner;
-				printf("Bits del conteiner: %d \n", conteiner);
+				
 				word[incrementadorWord] = conteiner;
 				incrementadorWord++;
 				incrementador = 0;
@@ -118,10 +135,12 @@ void start_unhideInformation() {
 				conteiner = 0;
 				conteiner = conteiner | anothertemp_byte;
 			}
+			i++;
 			if(i == 4){
 			pixel_index++;
+			i=0;
 			}
-			i++;
+			
 
 	}
 
@@ -133,7 +152,6 @@ void start_unhideInformation() {
 		if (i%4 == 0){
 			printf("Pixel: %d \n",i/4);
 		}
-		
 		fprintf(pf, "%d ", word[i]);
 		printf("%d ",word[i]);
 	}
