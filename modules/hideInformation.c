@@ -136,7 +136,7 @@ void start_hideInformation(){
 
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
 
-	uint32_t char_index = 0;
+	int  char_index = 7;
 	bool char_isDefined = false;
 	uint32_t pixelBit_index = 0;
 	bool pixel_isDefined = false;
@@ -149,19 +149,20 @@ void start_hideInformation(){
 	uint8_t bits_character[8];
 	uint32_t i = 0;
 	uint32_t j = 0;
+	char newData = 0;
 	bool byte_cleaned = false;
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		if(!char_isDefined){
 			char character = text_buffer[text_index];
 			separateInBits(bits_character, character, k, pixelBit_index);
 			char_isDefined = true;
-			char_index = 0;
+			char_index = 7;
 		}
 		if(!pixel_isDefined){
 			pixel_isDefined = true;
 			pixelBit_index = 0;
 		}
-			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
+			while( pixelBit_index < pixel_MaximumBitCapacity && char_index > -1){
 
 				for(;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;){
 					if(!byte_cleaned){
@@ -169,11 +170,11 @@ void start_hideInformation(){
 					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] << k) ;
 					byte_cleaned = true;
 					}
-						for(;j<k && char_index < 8 && pixelBit_index < pixel_MaximumBitCapacity;j++){
-							char newData = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
+						for(;j<k && char_index > -1 && pixelBit_index < pixel_MaximumBitCapacity;j++){
+						    newData = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
 							dataNEW[pixelImage_index*4+i] = newData;
 							pixelBit_index++;
-							char_index++;
+							char_index--;
 						}
 						if(j == k){
 							j = 0;
@@ -191,7 +192,7 @@ void start_hideInformation(){
 			pixelImage_index++;
 			printf("pixelImage_index: %u\n",pixelImage_index);
 		}
-		if(char_index == 8){
+		if(char_index == -1){
 			char_isDefined = false;
 			text_index++;
 			printf("text index: %u \n",text_index);
