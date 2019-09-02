@@ -147,7 +147,7 @@ void start_hideInformation(){
 	uint32_t pixelImage_index = 0;
 
 	uint8_t bits_character[8];
-	uint32_t i = 3;
+	uint32_t i = 0;
 	uint32_t j = 0;
 	bool byte_cleaned = false;
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
@@ -163,7 +163,7 @@ void start_hideInformation(){
 		}
 			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
 
-				for(;i>=0 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;){
+				for(;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;){
 					if(!byte_cleaned){
 					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] >> k) ;
 					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] << k) ;
@@ -177,12 +177,12 @@ void start_hideInformation(){
 						}
 						if(j == k){
 							j = 0;
-							i--;
+							i++;
 							byte_cleaned = false;
 						}
 				}
-				if(i == -1){
-					i = 3;
+				if(i == 4){
+					i = 0;
 				}
 			}
 		// The while-loop will move along the structure and modify the bits that can be completed
