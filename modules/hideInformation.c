@@ -69,23 +69,22 @@ BMP* receiveSourceImageToHide(char* file[]){
 }
 //------------------------------------------------------------------------
 
-void separateInBits(char* bits_character, char character, int k, int pixelBit_index){
+void separateInBits(uint8_t* bits_character, uint8_t character, int k, int pixelBit_index){
 	int offset = pixelBit_index % k;
-	int maxBitsPerByte = 8;
-	for (int i = 0; i < maxBitsPerByte; i++){
+	for (int i = 0; i <= 7; i++){
 		bits_character[i] = (0x01 << i) & character;	
 	}
 	if(k < 8){
 		int internalOffset = 0;
-		for (int j = 0; j < maxBitsPerByte;j++){
+		for (int j = 0; j < 8 ;j++){
 			internalOffset = internalOffset % k;
 			int totalOffset = (internalOffset+offset) % k;
-			if( (j - totalOffset) < 0 ){
-				int incr = j - totalOffset; // abs(j - totalOffset)
-				incr = -incr;
-				bits_character[j] = bits_character[j] << incr;
+			int shift = j - totalOffset;
+			if( shift < 0 ){
+				shift = -shift;
+				bits_character[j] = bits_character[j] << shift;
 			} else {
-				bits_character[j] = bits_character[j] >> (j - (totalOffset));
+				bits_character[j] = bits_character[j] >> shift;
 			}
 				internalOffset++;
 		}
@@ -153,16 +152,16 @@ void start_hideInformation(){
 	bool byte_cleaned = false;
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		if(!char_isDefined){
-			char character = text_buffer[text_index];
+			uint8_t character = text_buffer[text_index];
 			separateInBits(bits_character, character, k, pixelBit_index);
 			char_isDefined = true;
-			char_index = 7;
+			char_index = 0;
 		}
 		if(!pixel_isDefined){
 			pixel_isDefined = true;
 			pixelBit_index = 0;
 		}
-			while( pixelBit_index < pixel_MaximumBitCapacity && char_index > -1){
+			while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
 
 				for(;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;){
 					if(!byte_cleaned){
@@ -170,11 +169,11 @@ void start_hideInformation(){
 					dataNEW[pixelImage_index*4+i] = (dataNEW[pixelImage_index*4+i] << k) ;
 					byte_cleaned = true;
 					}
-						for(;j<k && char_index > -1 && pixelBit_index < pixel_MaximumBitCapacity;j++){
+						for(;j<k && char_index < 8 && pixelBit_index < pixel_MaximumBitCapacity;j++){
 						    newData = dataNEW[pixelImage_index*4+i] | bits_character[char_index];
 							dataNEW[pixelImage_index*4+i] = newData;
 							pixelBit_index++;
-							char_index--;
+							char_index++;
 						}
 						if(j == k){
 							j = 0;
@@ -192,7 +191,7 @@ void start_hideInformation(){
 			pixelImage_index++;
 			printf("pixelImage_index: %u\n",pixelImage_index);
 		}
-		if(char_index == -1){
+		if(char_index == 8){
 			char_isDefined = false;
 			text_index++;
 			printf("text index: %u \n",text_index);

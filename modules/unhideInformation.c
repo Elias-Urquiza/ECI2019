@@ -1,6 +1,6 @@
 #include "unhideInformation.h"
-
-
+#include "hideInformation.h"
+#include <stdbool.h>
 
 
 
@@ -54,8 +54,6 @@ uint8_t* receiveImage(uint32_t *width, uint32_t *height){
 	uint8_t* dataNEW = (uint8_t*)bmp_data(src_img);
 	return dataNEW;
 }
-
-
 int receiveLSBAmount(){
 	int k = 0;
 	printf("Input the amount of LSB you have used:\n");
@@ -84,75 +82,90 @@ uint8_t reverseBits(uint8_t conteiner)
     reverse_conteiner <<= count; 
     return reverse_conteiner; 
 } 
-
+char createChar(char bits_character[], int k, int pixelBit_index){
+	int offset = pixelBit_index % k;
+	char newCharacter = 0x00;
+	char mask[8];
+	for(int i = 0; i < 8;i++){
+		mask[i] = (0x01) << i;
+	}
+	int internalOffset = 0;
+	for(int j = 0; j < 8; j++){
+		if(bits_character[j] == 0){
+			mask[j] = mask[j] & 0x00;
+		}
+	}
+	for(int j = 0; j < 8;j++){
+	newCharacter = newCharacter | mask[j];
+	}
+	return newCharacter;
+}
 
 void start_unhideInformation() {
-	uint32_t height  = 0;
-	uint32_t width = 0; 
+	uint32_t height = 0;
+	uint32_t width = 0;
 	uint8_t* dataNew = receiveImage(&height, &width);
-	int k  = receiveLSBAmount();
-	uint8_t extractor = pow(2, k)-1;
-	uint8_t temp_byte;
-	uint8_t conteiner = 0;
+	uint32_t k  = receiveLSBAmount();
 	uint8_t word[5000];
-	int incrementadorWord = 0;
-	u_int8_t anothertemp_byte;
-	int j=0;
-	int i=0;
-	int incrementador = 0;
-	int cantAlign = 0;
-	int pixel_index = 0;
-		while (incrementadorWord != 1000){
-			temp_byte = dataNew[pixel_index*4 + i] & extractor;
-			printf("Bits originales: %d \n", temp_byte);
-			int cant = 8-k-k*incrementador-cantAlign;
-			if (cant > 0){
-				printf("Bits extraidos: %d \n", temp_byte);
-				temp_byte  = temp_byte<<(cant);
-				conteiner  = temp_byte | conteiner;
-				incrementador++;
+	uint32_t j=0;
+	uint32_t i=0;
+	uint32_t incrementador = 0;
+	uint32_t cantAlign = 0;
+	uint32_t pixel_index = 0;
+	uint8_t bits_character[8];
+	bool char_isDefined = false;
+	bool pixel_isDefined = false;
+	uint32_t char_index = 0;
+	uint32_t pixelBit_index = 0;
+	uint32_t pixel_MaximumBitCapacity = k*4;
+	uint32_t pixelImage_index = 0;
+	uint32_t text_index = 0;
+	while(text_index < 5000){
+		if(!char_isDefined){
+			uint8_t character = 0xff;
+			separateInBits(bits_character, character, k, pixelBit_index);
+			char_isDefined = true;
+			char_index = 0;
+		}
+		if(!pixel_isDefined){
+			pixel_isDefined = true;
+			pixelBit_index = 0;
+		}
+		while( pixelBit_index < pixel_MaximumBitCapacity && char_index < 8){
 
-			} else if (cant == 0){
-				conteiner  = temp_byte | conteiner;
-				
-				word[incrementadorWord] = conteiner;
-				incrementadorWord++;
-				incrementador = 0;
-				conteiner = 0;
-				cantAlign = 0;
+			for(;i<=3 && pixelBit_index < pixel_MaximumBitCapacity && char_index < 8;){
 
-			} else {
-				cantAlign = abs(cant);
-				printf("Bits de alineacion: %d \n",cantAlign);
-				uint8_t extractorAlign = pow(2, cantAlign)-1;
-				anothertemp_byte = temp_byte & extractorAlign;
-				anothertemp_byte = anothertemp_byte<<8-cantAlign;
-				temp_byte = temp_byte>>cantAlign;
-				conteiner  = temp_byte | conteiner;
-				word[incrementadorWord] = conteiner;
-				incrementadorWord++;
-				incrementador = 0;
-				conteiner = 0;
-				conteiner = conteiner | anothertemp_byte;
+				for(;j<k && char_index < 8 && pixelBit_index < pixel_MaximumBitCapacity;j++)    {
+
+					bits_character[char_index] = dataNew[pixelImage_index*4+i] & bits_character[char_index];
+					pixelBit_index++;
+					char_index++;
+				}
+				if(j == k){
+					j = 0;
+					i++;
+				}
 			}
-			i++;
 			if(i == 4){
-			pixel_index++;
-			i=0;
+				i = 0;
 			}
-			
-
+		}
+		if(pixelBit_index == pixel_MaximumBitCapacity){ 
+				pixel_isDefined = false;
+				pixelImage_index++;
+		}
+		if(char_index == 8){
+			word[text_index] = createChar(bits_character, k, pixelBit_index);	
+			char_isDefined = false;
+			text_index++;
+		}
 	}
 
 		
-		FILE* pf = fopen("texto.csv", "w");
-	
-
 	for (int i=0; i<1000; i++) {
 		if (i%4 == 0){
 			printf("Pixel: %d \n",i/4);
 		}
-		fprintf(pf, "%d ", word[i]);
 		printf("%d ",word[i]);
 	}
 }
