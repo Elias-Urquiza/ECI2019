@@ -50,6 +50,10 @@ def compare_images(imageA, imageB, title):
 	plt.imshow(imageB, cmap = plt.cm.gray)
 	plt.axis("off")
  
+	f = open("datos.csv","a+")
+	f.write("MSE    PSNR      SSIM \n")
+	f.write("%.2f  , %.2f , %.2f" % (m, p, s))
+
 	# show the images
 	plt.show()
 
