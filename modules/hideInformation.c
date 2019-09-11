@@ -117,10 +117,10 @@ char* getRest(char* rest, uint64_t r) {
 
 //------------------------------------------------------------------------
 
-char* make_textLenght(uint32_t  lenght, uint32_t  size){
+char* make_textLenght(uint64_t  lenght, uint64_t  size){
 	uint64_t c = 2479;   //c is a constant added to produce noise in the result
-	size = size/32;
-	uint64_t r = lenght * size; 
+	size = size/512;
+	uint64_t r = lenght*size; 
 	r = r + c;
 	char* rest[10];
 	char* result = getRest(rest, r);
@@ -153,7 +153,7 @@ void start_hideInformation(){
 	printf("filesize %u \n",file_size);
 
 	int k = receiveLSBAmountHideInfo();
-
+	
 	//receive the image
 	printf("Input the image where the information will be hidden:\n");
 	scanf("%s", file);
@@ -188,9 +188,14 @@ void start_hideInformation(){
 
 	uint32_t text_index = 0;
 	uint32_t pixel_MaximumBitCapacity = retMaxKCap(k);
-	uint32_t pixelImage_total = height * row_size;
+	uint64_t pixelImage_total = (height*row_size);
 	uint32_t pixelImage_index = 0;
-
+	uint64_t total = height*height*4;
+	while  ((pixelImage_total*k) < file_size) {
+		printf("The text is too large for the image, k will be incremented");
+		k++;
+	}
+	
 
 
 	char* restChar = make_textLenght(file_size, pixelImage_total);

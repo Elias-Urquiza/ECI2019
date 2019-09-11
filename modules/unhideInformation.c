@@ -91,7 +91,7 @@ char createChar(char bits_character[], int k, int pixelBit_index){
 }
 
 uint32_t getSize (char* restChar, uint64_t image_size) {
-	image_size = (image_size/32);
+	image_size = (image_size/512);
 	int i=7;
 	uint32_t c = 2479;
 	while (restChar[i]<97) {
@@ -113,7 +113,7 @@ uint32_t getSize (char* restChar, uint64_t image_size) {
 	charRest = charRest - 97;
 	charDiv = charDiv+charRest;
 	charDiv = charDiv - c;
-	charDiv =  charDiv / image_size  ;
+	charDiv =  (charDiv/image_size)  ;
 	return charDiv;
 
 }

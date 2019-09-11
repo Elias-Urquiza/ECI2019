@@ -26,6 +26,6 @@ BMP* receiveSourceImageToHide(char* file[]);
 
 char* getRest(char* rest, uint64_t r);
 
-char* make_textLenght(uint32_t  lenght, uint32_t  size);
+char* make_textLenght(uint64_t  lenght, uint64_t  size);
 
 #endif

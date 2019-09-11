@@ -1,3 +1,11 @@
 MSE    PSNR      SSIM 
-0.13337326049804688  201.4085095404767   0.9993921485350618MSE    PSNR      SSIM 
-0.13  , 201.41 , 1.00
+0.23  , 199.05 , 1.00 
+Portrait with 58333
+MSE    PSNR      SSIM 
+0.23  , 199.05 , 1.00 
+Portrait with 70014
+MSE    PSNR      SSIM 
+0.28  , 198.26 , 1.00 
+Portrait with high 
+MSE    PSNR      SSIM 
+1.53  , 190.82 , 1.00 

@@ -29,7 +29,7 @@ def getpsnr(imageA, imageB, mse):
  
 
 
-def compare_images(imageA, imageB, title):
+def compare_images(imageA, imageB, title, title2):
 	# compute the mean squared error and structural similarity
 	# index for the images
 	m = getmse(imageA, imageB)
@@ -51,8 +51,9 @@ def compare_images(imageA, imageB, title):
 	plt.axis("off")
  
 	f = open("datos.csv","a+")
+	f.write(title2 +"\n")
 	f.write("MSE    PSNR      SSIM \n")
-	f.write("%.2f  , %.2f , %.2f" % (m, p, s))
+	f.write("%.2f  , %.2f , %.2f \n" % (m, p, s))
 
 	# show the images
 	plt.show()
@@ -61,9 +62,10 @@ def compare_images(imageA, imageB, title):
 # and the original + photoshop
 print("Insert the original image: ")
 image1 = str(input())
-print("Insert the first stego image: ")
+print("Insert the stego image: ")
 image2 = str(input())
-
+print("Insert the name of the image: ")
+title = str(input())
 
 original = cv2.imread(image1)
 stego1 = cv2.imread(image2)
@@ -89,4 +91,4 @@ plt.show()
  
 # compare the images
 
-compare_images(original, stego1, "Original vs. Stego-Image1")
+compare_images(original, stego1, "Original vs. Stego-Image1", title)
