@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <time.h> 
+#include <string.h>
 
 char* make_textBuffer(FILE* file_stream, int* file_size);
 
@@ -21,5 +23,9 @@ int receiveTextVariables(char* file[], FILE** text);
 int receiveLSBAmountHideInfo();
 
 BMP* receiveSourceImageToHide(char* file[]);
+
+char* getRest(char* rest, uint64_t r);
+
+char* make_textLenght(uint32_t  lenght, uint32_t  size);
 
 #endif

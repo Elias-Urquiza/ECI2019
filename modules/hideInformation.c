@@ -90,6 +90,43 @@ void separateInBits(uint8_t* bits_character, uint8_t character, int k, int pixel
 		}
 	}
 }
+
+//------------------------------------------------------------------------
+
+char* getRest(char* rest, uint64_t r) {
+	
+	uint8_t i=0;
+	uint8_t res; 
+	while (r>27) {
+		res = r%27;
+		res = res + 97;
+		rest[i] = res;
+		r = r/27;
+		i++;
+	}
+	r = r +97;
+	rest[i] = r;
+	i++;
+	while (i < 8) {
+		char randomletter = 'A' + (rand() % 26);
+		rest[i] = randomletter;
+		i++;
+	}
+	return rest;
+}
+
+//------------------------------------------------------------------------
+
+char* make_textLenght(uint32_t  lenght, uint32_t  size){
+	uint64_t c = 2479;   //c is a constant added to produce noise in the result
+	size = size/32;
+	uint64_t r = lenght * size; 
+	r = r + c;
+	char* rest[10];
+	char* result = getRest(rest, r);
+	return result;
+}
+
 //------------------------------------------------------------------------
 void start_hideInformation(){
 
@@ -101,10 +138,15 @@ void start_hideInformation(){
 	scanf("%s", file);
 
 	text = fopen(file,"rb");
+
+
 	if (text == 0) {
 		fprintf(stderr, "Error opening file.\n");
 		exit(EXIT_FAILURE);
 	}
+
+
+
 
 	char* text_buffer = make_textBuffer(text, &file_size);
 
@@ -140,10 +182,20 @@ void start_hideInformation(){
 	uint32_t pixelBit_index = 0;
 	bool pixel_isDefined = false;
 
+
+
+
+
 	uint32_t text_index = 0;
 	uint32_t pixel_MaximumBitCapacity = retMaxKCap(k);
 	uint32_t pixelImage_total = height * row_size;
 	uint32_t pixelImage_index = 0;
+
+
+
+	char* restChar = make_textLenght(file_size, pixelImage_total);
+	char* restChar2 = restChar;
+
 
 	uint8_t bits_character[8];
 	uint32_t i = 0;
@@ -152,10 +204,25 @@ void start_hideInformation(){
 	bool byte_cleaned = false;
 	while(text_index < file_size && pixelImage_index < pixelImage_total){
 		if(!char_isDefined){
+			if (pixelImage_index < 16){
+				uint8_t character = restChar[text_index];
+				separateInBits(bits_character, character, k, pixelBit_index);
+				restChar = restChar2;
+				char_isDefined = true;
+				char_index = 0;
+			} else if (pixelImage_index == 16) {
+				text_index = 0;
 			uint8_t character = text_buffer[text_index];
 			separateInBits(bits_character, character, k, pixelBit_index);
 			char_isDefined = true;
 			char_index = 0;
+			} else {
+			uint8_t character = text_buffer[text_index];
+			separateInBits(bits_character, character, k, pixelBit_index);
+			char_isDefined = true;
+			char_index = 0;
+			}
+			
 		}
 		if(!pixel_isDefined){
 			pixel_isDefined = true;

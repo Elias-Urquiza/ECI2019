@@ -21,5 +21,6 @@ void printTextStego(char* word[], int WordLength);
 uint8_t* receiveImage();
 int receiveLSBAmount();
 void start_unhideInformation();
+uint32_t getSize (char* restChar, uint64_t image_size);
 //void separateInBits(char* bits_character, int k, int pixelBit_index);
 #endif

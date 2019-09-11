@@ -15,6 +15,8 @@ void printUsage(){
 
 int main(int argc, char* argv[]){
 
+srand (time(NULL));
+
 int mode = 0;
 
 if(argc!=2){
