@@ -1,7 +1,5 @@
-/* Este archivo debe contener la implementacion de la funcion que escribe en un bmp el mensaje secreto en sus LSB. 
- * Tener en cuenta que hay que preguntarle al usuario en que archivo quiere esconder el mensaje, cual es el mensaje, y cuantos bits usa. 
- * Esta funcion es llamada apenas el usuario elige el modo de uso entre esconder informacion, descifrar informacion, o hacer benchmarking
- */
+/*  This file contains the implementation of the function that writes the cypher-test in the bmp */
+	
 
 #include "hideInformation.h"
 
@@ -25,14 +23,11 @@ int retMaxKCap(int k){
 	return 4*k;
 }
 
-//------------------------------------------------------------------------
-int receiveTextVariables(char* file[], FILE** text){
-	//open and receive text file
-	
-	return 0;
-}
+
+
 
 //------------------------------------------------------------------------
+/* Ask the user for the a k value                                           */
 int receiveLSBAmountHideInfo(){
 	int k = 0;
 	printf("Input the amount of LSB you want to use:\n");
@@ -45,7 +40,7 @@ int receiveLSBAmountHideInfo(){
 	return k;
 }
 //------------------------------------------------------------------------
-
+/* Receive bmp. It also convert the format to 32 bpp if it is necessary */
 BMP* receiveSourceImageToHide(char* file[]){
 
 	BMP *src_img = bmp_read (file);
@@ -68,7 +63,7 @@ BMP* receiveSourceImageToHide(char* file[]){
 	return src_img;
 }
 //------------------------------------------------------------------------
-
+/* Receive the character and bits_character y in each position, puts it value in binary. For example, a = '97' = 1100001. bits_character = {'1','1','0','0','0','0','1'}  */
 void separateInBits(uint8_t* bits_character, uint8_t character, int k, int pixelBit_index){
 	int offset = pixelBit_index % k;
 	for (int i = 0; i <= 7; i++){
@@ -92,7 +87,7 @@ void separateInBits(uint8_t* bits_character, uint8_t character, int k, int pixel
 }
 
 //------------------------------------------------------------------------
-
+/* Make a array of char to keep the rest of the given r */
 char* getRest(char* rest, uint64_t r) {
 	
 	uint8_t i=0;
@@ -116,7 +111,7 @@ char* getRest(char* rest, uint64_t r) {
 }
 
 //------------------------------------------------------------------------
-
+/* It codificate the lenght of the text */
 char* make_textLenght(uint64_t  lenght, uint64_t  size){
 	uint64_t c = 2479;   //c is a constant added to produce noise in the result
 	size = size/512;
@@ -163,11 +158,11 @@ void start_hideInformation(){
 	BMP* bmpNEW = bmp_copy(src_img, 1);
 
 	buffer_info_t info_src, info_new;
-        setear_buffer(&info_src, src_img); // setear_buffer?
+        setear_buffer(&info_src, src_img); 
         setear_buffer(&info_new, bmpNEW);
 
         bgra_t (*src_matrix)[(info_src.row_size+3)/4] = (bgra_t (*)[(info_src.row_size+3)/4]) info_src.bytes;
-    bgra_t (*new_matrix)[(info_new.row_size+3)/4] = (bgra_t (*)[(info_new.row_size+3)/4]) info_new.bytes;
+    	bgra_t (*new_matrix)[(info_new.row_size+3)/4] = (bgra_t (*)[(info_new.row_size+3)/4]) info_new.bytes;
 
         uint32_t width = info_new.width;
         uint32_t height = info_new.height;
@@ -177,6 +172,7 @@ void start_hideInformation(){
 
 	uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
 
+//start values
 	int  char_index = 7;
 	bool char_isDefined = false;
 	uint32_t pixelBit_index = 0;
@@ -191,16 +187,12 @@ void start_hideInformation(){
 	uint64_t pixelImage_total = (height*row_size);
 	uint32_t pixelImage_index = 0;
 	uint64_t total = height*height*4;
-	while  ((pixelImage_total*k) < file_size) {
-		printf("The text is too large for the image, k will be incremented");
-		k++;
-	}
+
 	
 
-
+	/* Codification lenght of the text */
 	char* restChar = make_textLenght(file_size, pixelImage_total);
-	char* restChar2 = restChar;
-
+	
 
 	uint8_t bits_character[8];
 	uint32_t i = 0;
@@ -283,33 +275,3 @@ void start_hideInformation(){
 }
 
 
-/*
-	while((c=fgetc(text))!=EOF){
-		for (int i = 0; i < height; i++) {
-        	for (int j = 0; j < width; j++) {
-            	new_matrix[i][j].b = (int)c;
-			}
-		}
-	}
-
-
-	
-	for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            new_matrix[i][j].b = 255;
-            new_matrix[i][j].g = 0;
-            new_matrix[i][j].r = 0;
-            new_matrix[i][j].a = 255;
-        }
-    } */
-/*
-    uint8_t* dataNEW = (uint8_t*)bmp_data(bmpNEW);
-
-	for(int j=0;j<height;j++) {
-		for(int i=0;i<width;i++) {
-			dataNEW[j*info_new.row_size+i*4+0] = 255;
-			dataNEW[j*info_new.row_size+i*4+1] = 00;
-			dataNEW[j*info_new.row_size+i*4+2] = 00;
-			dataNEW[j*info_new.row_size+i*4+3] = 255;
-		}
-	}*/

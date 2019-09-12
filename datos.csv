@@ -1,11 +1,63 @@
+|test1| = 11876
+|test2| = 47507
+
+landScape01-test1
 MSE    PSNR      SSIM 
-0.23  , 199.05 , 1.00 
-Portrait with 58333
+17247.63  , 150.29 , 0.04 
+landScape01-test2
 MSE    PSNR      SSIM 
-0.23  , 199.05 , 1.00 
-Portrait with 70014
+17245.81  , 150.29 , 0.04 
+landscape01-test3
 MSE    PSNR      SSIM 
-0.28  , 198.26 , 1.00 
-Portrait with high 
+17242.66  , 150.29 , 0.04 
+landscape02-01-test
 MSE    PSNR      SSIM 
-1.53  , 190.82 , 1.00 
+0.22  , 199.29 , 1.00 
+landscape02-test3
+MSE    PSNR      SSIM 
+0.05  , 205.31 , 1.00 
+landscape02-test4
+MSE    PSNR      SSIM 
+0.22  , 199.29 , 1.00 
+land03-test1
+MSE    PSNR      SSIM 
+10205.01  , 152.57 , 0.20 
+land03-test2
+MSE    PSNR      SSIM 
+10197.37  , 152.57 , 0.20 
+land-test3
+MSE    PSNR      SSIM 
+10197.37  , 152.57 , 0.20 
+land04-test1
+MSE    PSNR      SSIM 
+0.05  , 206.12 , 1.00 
+land04-02
+MSE    PSNR      SSIM 
+0.18  , 200.08 , 1.00 
+land05-test1
+MSE    PSNR      SSIM 
+10157.84  , 152.59 , 0.40 
+land05-test2
+MSE    PSNR      SSIM 
+10157.82  , 152.59 , 0.40 
+por01-test1
+MSE    PSNR      SSIM 
+0.05  , 205.95 , 1.00 
+por-test1
+MSE    PSNR      SSIM 
+20151.24  , 149.62 , 0.17 
+por03-test1
+MSE    PSNR      SSIM 
+33876.03  , 147.36 , 0.14 
+por04-test1
+MSE    PSNR      SSIM 
+0.13  , 201.56 , 1.00 
+por04-test2
+MSE    PSNR      SSIM 
+0.51  , 195.54 , 1.00 
+still-test1
+MSE    PSNR      SSIM 
+12448.49  , 151.71 , 0.08 
+stil02
+MSE    PSNR      SSIM 
+0.16  , 200.70 , 1.00 

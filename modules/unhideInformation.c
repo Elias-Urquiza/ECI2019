@@ -37,12 +37,8 @@ void printTextStego(char* word[], int wordLength){
 		fprintf(pf, "%s ", word[i]);
 	}
 }
-/*
-uint8_t* receiveImage(uint32_t *width, uint32_t *height){
-	
-	return dataNEW;
-}
-*/
+
+
 int receiveLSBAmount(){
 	int k = 0;
 	printf("Input the amount of LSB you have used:\n");
@@ -157,6 +153,8 @@ void start_unhideInformation() {
 	uint32_t pixelImage_index = 0;
 	uint32_t text_index = 0;
 
+//Read the first 32 bytes for the lenght of the text
+
 	while(text_index < 8){
 		if(!char_isDefined){
 			uint8_t character = 0xff;
@@ -204,6 +202,8 @@ void start_unhideInformation() {
 	char word[word_size];
 	text_index = 0;
 
+//start values 
+
 	j=0;
 	i=0;
 	incrementador = 0;
@@ -216,7 +216,7 @@ void start_unhideInformation() {
 	pixelBit_index = 0;
 	pixel_MaximumBitCapacity = k*4;
 	
-
+//Read the cypher text from stego image
 
 	while(text_index < word_size){
 		if(!char_isDefined){
@@ -263,7 +263,7 @@ void start_unhideInformation() {
 			text_index++;
 		}
 	}
-
+//Writing the cypher text
 FILE* text = NULL;
 text = fopen("stego-text.txt","w+");	
 
